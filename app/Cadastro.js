@@ -16,24 +16,31 @@ const Cadastro = () => {
     <View style={styles.container}>
       <View style={styles.inputContainer}></View>
       <Image style={styles.logo} source={require('./../assets/logo.png')} />
-      
-      <View style={styles.rota}>
-        <Text style={styles.label}>Nome Completo</Text>
+
+        <Text style={styles.label}>Nome Completo:</Text>
            <TextInput style={styles.input}/>
-        <Text style={styles.label}>Email</Text>
-        <TextInput style={styles.input}/>
 
-        <Text style={styles.label}>Telefone</Text>
-        <TextInput style={styles.input}/>
+        <Text style={styles.label}>Email:</Text>
+          <TextInput style={styles.input}/>
 
-        <Text style={styles.label}>Cria Senha</Text>
-        <TextInput style={styles.input}/>
+        <Text style={styles.label}>Telefone:</Text>
+          <TextInput style={styles.input}/>
 
-        <Text style={styles.label}>Confirmar senha</Text>
-        <TextInput style={styles.input}/>
+        <Text style={styles.label}>Criar senha :</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Senha"
+              secureTextEntry={true}
+              onChangeText={setPassword}
+            />
 
-      </View>
-      
+        <Text style={styles.label}>Confirmar senha:</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Senha"
+              secureTextEntry={true}
+              onChangeText={setPassword}
+            />
 
       <TouchableOpacity 
         style={styles.button} 
@@ -42,9 +49,12 @@ const Cadastro = () => {
         <Text style={styles.buttonTextB}>Cadastrar</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('EsqueceuSenha')}>
-        <Text style={styles.input2}>Esqueceu a senha</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('index')}>
+        <Text style={styles.input2}>Possuo cadastro</Text>
       </TouchableOpacity>
+
+
+
 
     </View>
   );
@@ -57,7 +67,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#2D9AFF',
     paddingHorizontal: 20,
-    bottom:350
+    bottom:370
   },
   inputContainer: {
     height : '85%',
@@ -66,13 +76,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 25,
     padding: 20,
-    top:700
+    top:750
   },
   logo: {
     width: 120,
     height: 120,
     marginBottom: 20,
-    bottom:70
+    bottom:20
   },
   label: {
     marginBottom: 5,
@@ -81,26 +91,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     right:100
   },
-  label2: {
-    marginBottom: 5,
-    color: '#000',
-    textAlign: 'justify',
-    fontWeight: 'bold',
-    right:100
-  },
   input: {
-  right:110,
-  width: '80%',
-  height: 30,
-  borderWidth: 1,
-  borderTopWidth: 0, // Remove a borda superior
-  borderLeftWidth: 0, // Remove a borda esquerda
-  borderRightWidth: 0, // Remove a borda direita
-  borderColor: 'black', // Torna a cor da borda transparente
-  borderBottomColor: '#cccccc', // Cor da linha que parece ser a borda
-  borderRadius: 50,
-  paddingHorizontal: 170,
-  marginBottom: 10,
+    width: '90%',
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#cccccc',
+    borderRadius: 50,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+    backgroundColor: '#D9D9D9',
   },
   button: {
     width: '50%',
