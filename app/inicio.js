@@ -21,6 +21,9 @@ const inicio = () => {
       <TouchableOpacity style={styles.button3}>
         <Text style={styles.buttonTextB}>Hoteis</Text>
       </TouchableOpacity> 
+
+      <Text style={styles.textoTitulo}>Populares da semana</Text>
+
     </View>
   );
 };
@@ -86,6 +89,15 @@ const styles = StyleSheet.create({
     color: '#3A3A3A',
     fontSize: 15,
     fontWeight: 'bold',
+  },
+  textoTitulo: {
+    marginBottom: 5,
+    color: '#242424',
+    textAlign: 'justify',
+    fontWeight: 'bold',
+    bottom:740,
+    left:25,
+    fontSize: 20,
   },
   label: {
     marginBottom: 5,
