@@ -16,23 +16,24 @@ const Cadastro = () => {
     <View style={styles.container}>
       <View style={styles.inputContainer}></View>
       <Image style={styles.logo} source={require('./../assets/logo.png')} />
+      
+      <View style={styles.rota}>
+        <Text style={styles.label}>Nome Completo</Text>
+           <TextInput style={styles.input}/>
+        <Text style={styles.label}>Email</Text>
+        <TextInput style={styles.input}/>
 
-      <Text style={styles.label}>Usuário</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email" 
-        value={email}
-        onChangeText={setEmail}
-      />
+        <Text style={styles.label}>Telefone</Text>
+        <TextInput style={styles.input}/>
 
-      <Text style={styles.label}>Senha</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Senha"
-        secureTextEntry={true}
-        value={password}
-        onChangeText={setPassword}
-      />
+        <Text style={styles.label}>Cria Senha</Text>
+        <TextInput style={styles.input}/>
+
+        <Text style={styles.label}>Confirmar senha</Text>
+        <TextInput style={styles.input}/>
+
+      </View>
+      
 
       <TouchableOpacity 
         style={styles.button} 
@@ -65,13 +66,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 25,
     padding: 20,
-    top:600
+    top:700
   },
   logo: {
     width: 120,
     height: 120,
     marginBottom: 20,
-    bottom:160
+    bottom:70
   },
   label: {
     marginBottom: 5,
@@ -80,15 +81,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     right:100
   },
+  label2: {
+    marginBottom: 5,
+    color: '#000',
+    textAlign: 'justify',
+    fontWeight: 'bold',
+    right:100
+  },
   input: {
-    width: '80%',
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#cccccc',
-    borderRadius: 50,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    backgroundColor: '#D9D9D9',
+  right:110,
+  width: '80%',
+  height: 30,
+  borderWidth: 1,
+  borderTopWidth: 0, // Remove a borda superior
+  borderLeftWidth: 0, // Remove a borda esquerda
+  borderRightWidth: 0, // Remove a borda direita
+  borderColor: 'black', // Torna a cor da borda transparente
+  borderBottomColor: '#cccccc', // Cor da linha que parece ser a borda
+  borderRadius: 50,
+  paddingHorizontal: 170,
+  marginBottom: 10,
   },
   button: {
     width: '50%',
@@ -98,6 +110,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
+    top:0
+  },
+  rota: {
+    left:110,
+  bottom:50,
+    
   },
   buttonTextB: {
     color: '#fff',
@@ -108,6 +126,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: '#0000FF',
     fontWeight: 'bold',
+    top:20
   },
 });
 
