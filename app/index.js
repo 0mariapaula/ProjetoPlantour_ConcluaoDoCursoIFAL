@@ -14,6 +14,9 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
+          <View style={styles.inputContainer}></View>
+
+
       <Image style={styles.logo} source={require('./../assets/logo.png')} />
 
       <Text style={styles.label}>Usuário</Text>
@@ -58,12 +61,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#AADDDD',
+    backgroundColor: '#2D9AFF',
     paddingHorizontal: 20,
+    bottom:350
+  },
+  inputContainer: {
+    height : '85%',
+    paddingTop: 0,
+    width: '110%',
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    padding: 20,
+    top:760
   },
   logo: {
-    width: 150,
-    height: 150,
+    width: 120,
+    height: 120,
     marginBottom: 20,
   },
   label: {
@@ -71,6 +84,7 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'justify',
     fontWeight: 'bold',
+    right:100
   },
   input: {
     width: '80%',
@@ -85,14 +99,14 @@ const styles = StyleSheet.create({
   button: {
     width: '50%',
     height: 50,
-    backgroundColor: '#AADDDD',
+    backgroundColor: '#2D9AFF',
     borderRadius: 35,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
   },
   buttonTextB: {
-    color: '#084D75',
+    color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
   },
