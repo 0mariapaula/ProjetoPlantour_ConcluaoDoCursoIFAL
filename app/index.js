@@ -38,13 +38,16 @@ const LoginScreen = () => {
 
       <TouchableOpacity 
         style={styles.button} 
-        onPress={handleLogin}
-      >
+        onPress={() => navigation.navigate('inicio')}>
         <Text style={styles.buttonTextB}>Entrar</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
         <Text style={styles.input2}>Primeiro acesso</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('EsqueceuSenha')}>
+        <Text style={styles.input2}>Esqueceu a senha</Text>
       </TouchableOpacity>
 
       <View style={styles.imglogo}>
@@ -84,16 +87,16 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'justify',
     fontWeight: 'bold',
-    right:100
+    right:120
   },
   input: {
-    width: '80%',
+    width: '90%',
     height: 50,
     borderWidth: 1,
     borderColor: '#cccccc',
     borderRadius: 50,
     paddingHorizontal: 10,
-    marginBottom: 10,
+    marginBottom: 15,
     backgroundColor: '#D9D9D9',
   },
   button: {
