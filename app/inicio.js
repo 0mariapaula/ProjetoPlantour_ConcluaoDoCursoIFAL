@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native'; 
-import { useNavigation } from 'expo-router';
+import React from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 
-const inicio = () => {
+const Inicio = () => {
   return (
     <View style={styles.container}>
-          <View style={styles.inputContainer}></View>
-    <View>
+      
+      <View style={styles.inputContainer}>
       <Text style={styles.label}>Plantour</Text>
-    </View>
 
-    <TouchableOpacity style={styles.button}>
+      </View>
+
+      <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonTextB}>Restaurantes</Text>
       </TouchableOpacity>
       
@@ -23,33 +23,50 @@ const inicio = () => {
       </TouchableOpacity> 
 
       <Text style={styles.textoTitulo}>Populares da semana</Text>
+      <Text style={styles.textoTitulo2}>Locais mais visitados no mundo</Text>
 
+      {/* Cards */}
+      <View style={styles.cardContainer}>
+        <View style={styles.card}>
+          <Image source={require('../assets/paris.png')} style={styles.cardImage} />
+          <Text style={styles.cardTitle}>Paris - França</Text>
+          <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+        </View>
+        <View style={styles.card}>
+          <Image source={require('../assets/maceio.png')} style={styles.cardImage} />
+          <Text style={styles.cardTitle}>Maceió - Brasil</Text>
+          <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+        </View>
+        <View style={styles.card}>
+          <Image source={require('../assets/paris.png')} style={styles.cardImage} />
+          <Text style={styles.cardTitle}>Paris - França</Text>
+          <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+        </View>
+        <View style={styles.card}>
+          <Image source={require('../assets/espanha.png')} style={styles.cardImage} />
+          <Text style={styles.cardTitle}>Espanha</Text>
+          <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+        </View>
+      </View>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
-  
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+  },
   inputContainer: {
-    height : '85%',
+    height: '45%',
     paddingTop: 0,
-    width: '110%',
+    width: '100%',
     backgroundColor: '#2D9AFF',
     borderRadius: 0,
     padding: 20,
-    bottom:530
-
-  },
-  input: {
-    width: '40%',
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#cccccc',
-    borderRadius: 50,
-    paddingHorizontal: 10,
-    marginBottom: 5,
-    backgroundColor: '#FFFFFF',
-    bottom:620,
-    left:15,
+    top: 30,
   },
   button: {
     width: '45%',
@@ -59,9 +76,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
-    bottom:720,
-    left:15,
-    
+    marginBottom: 20,
+    bottom: 130,
+    right: 100,
   },
   button2: {
     width: '45%',
@@ -71,8 +88,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
-    bottom:790,
-    left:210,
+    marginBottom: 20,
+    bottom: 220,
+    left: 100,
   },
   button3: {
     width: '45%',
@@ -82,8 +100,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
-    bottom:795,
-    left:110,
+    marginBottom: 20,
+    bottom: 240,
+    left: 10,
   },
   buttonTextB: {
     color: '#3A3A3A',
@@ -95,21 +114,59 @@ const styles = StyleSheet.create({
     color: '#242424',
     textAlign: 'justify',
     fontWeight: 'bold',
-    bottom:740,
-    left:25,
     fontSize: 20,
+    bottom: 230,
+    right: 80,
+  },
+  textoTitulo2: {
+    marginBottom: 5,
+    color: '#242424',
+    textAlign: 'justify',
+    fontWeight: 'bold',
+    fontSize: 20,
+    top: 200,
+   right:30,
+  
   },
   label: {
     marginBottom: 5,
-    color: '#fff',
+    color: '#FFFFFF',
     textAlign: 'justify',
     fontWeight: 'bold',
-    bottom:780,
-    left:25,
     fontSize: 25,
-
+    top:160,
+  
   },
-
+  cardContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap', // Permite que os cards sejam automaticamente posicionados em várias linhas
+    justifyContent: 'space-between',
+    marginTop: 20,
+    bottom:270,
+  },
+  card: {
+    width: '50%', // Ajuste o tamanho dos cards para ocupar metade do espaço disponível na linha
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    padding: 10,
+    alignItems: 'center',
+    marginBottom: 20,
+    
+  },
+  cardImage: {
+    width: 170,
+    height: 100,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  cardTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  cardDescription: {
+    textAlign: 'center',
+  },
 });
 
-export default inicio;
+export default Inicio;
