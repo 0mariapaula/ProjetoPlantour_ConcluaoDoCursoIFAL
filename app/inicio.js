@@ -25,6 +25,7 @@ const Inicio = () => {
         <Text style={styles.textoTitulo}>Populares da semana</Text>
         <Text style={styles.textoTitulo2}>Locais mais visitados no mundo</Text>
 
+
         {/* Cards */}
         <View style={styles.cardContainer}>
           <TouchableOpacity style={styles.card}>
@@ -47,6 +48,28 @@ const Inicio = () => {
             <Text style={styles.cardTitle}>Espanha</Text>
             <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
           </TouchableOpacity>
+
+          <Text style={styles.textoTitulo3}>Restaurantes próximos de você</Text>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.carouselContainer}>
+              <TouchableOpacity style={styles.cardCarousel}>
+                <Image source={require('../assets/LePetit.png')} style={styles.cardImageCarrossel} />
+                <Text style={styles.cardTitle}>Lê Petit</Text>
+                <Text style={styles.cardDescription}>A cidade da luz e do amor.</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.cardCarousel}>
+                <Image source={require('../assets/LePetit.png')} style={styles.cardImageCarrossel} />
+                <Text style={styles.cardTitle}>Lê Petit</Text>
+                <Text style={styles.cardDescription}>Coração tecnológico do Japão.</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.cardCarousel}>
+                <Image source={require('../assets/LePetit.png')} style={styles.cardImageCarrossel} />
+                <Text style={styles.cardTitle}>Lê Petit</Text>
+                <Text style={styles.cardDescription}>0,3 km.</Text>
+              
+              </TouchableOpacity>
+            </ScrollView>
+
+
         </View>
       </View>
     </ScrollView>
@@ -67,7 +90,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2D9AFF',
     borderRadius: 0,
     padding: 20,
-    top: 30,
+    top: 10,
   },
   button: {
     width: '45%',
@@ -78,7 +101,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 20,
     marginBottom: 20,
-    bottom: 130,
+    bottom: 150,
     right: 100,
   },
   button2: {
@@ -90,7 +113,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 20,
     marginBottom: 20,
-    bottom: 220,
+    bottom: 240,
     left: 100,
   },
   button3: {
@@ -102,7 +125,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 20,
     marginBottom: 20,
-    bottom: 240,
+    bottom: 260,
     left: 10,
   },
   buttonTextB: {
@@ -128,13 +151,22 @@ const styles = StyleSheet.create({
     bottom: 20,
     right: 30,
   },
+  textoTitulo3: {
+    marginBottom: 5,
+    color: '#242424',
+    textAlign: 'justify',
+    fontWeight: 'bold',
+    fontSize: 20,
+    bottom: 20,
+    left: 20,
+  },
   label: {
     marginBottom: 5,
     color: '#FFFFFF',
     textAlign: 'justify',
     fontWeight: 'bold',
     fontSize: 25,
-    top: 160,
+    top: 260,
   },
   cardContainer: {
     flexDirection: 'row',
@@ -165,6 +197,23 @@ const styles = StyleSheet.create({
   cardDescription: {
     textAlign: 'center',
   },
+  cardImageCarrossel: {
+    width: 160,
+    height: 100,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  cardCarousel: {
+    width: 170, // Ajuste o tamanho dos cards conforme necessário
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    marginRight: 10, // Margem à direita de cada card
+    marginLeft: 10, // Margem à esquerda de cada card
+  },
+  
+  
 });
 
 export default Inicio;
