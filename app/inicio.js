@@ -1,54 +1,55 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView } from 'react-native';
 
 const Inicio = () => {
   return (
-    <View style={styles.container}>
-      
-      <View style={styles.inputContainer}>
-      <Text style={styles.label}>Plantour</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Plantour</Text>
+        </View>
 
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonTextB}>Restaurantes</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.button2}>
+          <Text style={styles.buttonTextB}>Roteiros</Text>
+        </TouchableOpacity>  
+
+        <TouchableOpacity style={styles.button3}>
+          <Text style={styles.buttonTextB}>Hoteis</Text>
+        </TouchableOpacity> 
+
+        <Text style={styles.textoTitulo}>Populares da semana</Text>
+        <Text style={styles.textoTitulo2}>Locais mais visitados no mundo</Text>
+
+        {/* Cards */}
+        <View style={styles.cardContainer}>
+          <TouchableOpacity style={styles.card}>
+            <Image source={require('../assets/paris.png')} style={styles.cardImage} />
+            <Text style={styles.cardTitle}>Paris - França</Text>
+            <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.card}>
+            <Image source={require('../assets/maceio.png')} style={styles.cardImage} />
+            <Text style={styles.cardTitle}>Maceió - Brasil</Text>
+            <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.card}>
+            <Image source={require('../assets/paris.png')} style={styles.cardImage} />
+            <Text style={styles.cardTitle}>Paris - França</Text>
+            <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.card}>
+            <Image source={require('../assets/espanha.png')} style={styles.cardImage} />
+            <Text style={styles.cardTitle}>Espanha</Text>
+            <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonTextB}>Restaurantes</Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity style={styles.button2}>
-        <Text style={styles.buttonTextB}>Roteiros</Text>
-      </TouchableOpacity>  
-
-      <TouchableOpacity style={styles.button3}>
-        <Text style={styles.buttonTextB}>Hoteis</Text>
-      </TouchableOpacity> 
-
-      <Text style={styles.textoTitulo}>Populares da semana</Text>
-      <Text style={styles.textoTitulo2}>Locais mais visitados no mundo</Text>
-
-      {/* Cards */}
-      <View style={styles.cardContainer}>
-        <View style={styles.card}>
-          <Image source={require('../assets/paris.png')} style={styles.cardImage} />
-          <Text style={styles.cardTitle}>Paris - França</Text>
-          <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-        </View>
-        <View style={styles.card}>
-          <Image source={require('../assets/maceio.png')} style={styles.cardImage} />
-          <Text style={styles.cardTitle}>Maceió - Brasil</Text>
-          <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-        </View>
-        <View style={styles.card}>
-          <Image source={require('../assets/paris.png')} style={styles.cardImage} />
-          <Text style={styles.cardTitle}>Paris - França</Text>
-          <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-        </View>
-        <View style={styles.card}>
-          <Image source={require('../assets/espanha.png')} style={styles.cardImage} />
-          <Text style={styles.cardTitle}>Espanha</Text>
-          <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-        </View>
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -124,9 +125,8 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     fontWeight: 'bold',
     fontSize: 20,
-    top: 200,
-   right:30,
-  
+    bottom: 20,
+    right: 30,
   },
   label: {
     marginBottom: 5,
@@ -134,24 +134,22 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     fontWeight: 'bold',
     fontSize: 25,
-    top:160,
-  
+    top: 160,
   },
   cardContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap', // Permite que os cards sejam automaticamente posicionados em várias linhas
     justifyContent: 'space-between',
     marginTop: 20,
-    bottom:270,
+    bottom: 280,
   },
   card: {
     width: '50%', // Ajuste o tamanho dos cards para ocupar metade do espaço disponível na linha
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
-    padding: 10,
+    padding: 20,
     alignItems: 'center',
     marginBottom: 20,
-    
   },
   cardImage: {
     width: 170,
