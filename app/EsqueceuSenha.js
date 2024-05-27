@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView,TextInput } from 'react-native';
+import { useNavigation } from 'expo-router';
 
 const EsqueceuSenha = () => {
+const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Image source={require('../assets/Cadeado.png')} style={styles.cadeado} />
@@ -18,7 +20,7 @@ const EsqueceuSenha = () => {
       </TouchableOpacity>
       <Text style={styles.buttonTextOU}>OU</Text>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
         <Text style={styles.input2}>Criar Nova Conta</Text>
       </TouchableOpacity>
 
@@ -45,7 +47,6 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 5,
     color: '#FFFFFF',
-    textAlign: '',
     fontWeight: 'bold',
     fontSize: 23,
     top:60,

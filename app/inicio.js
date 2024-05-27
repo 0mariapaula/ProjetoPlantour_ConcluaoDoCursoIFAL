@@ -1,7 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView } from 'react-native';
+import { useNavigation } from 'expo-router';
+
 
 const Inicio = () => {
+const navigation = useNavigation();
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -28,7 +32,7 @@ const Inicio = () => {
 
         {/* Cards */}
         <View style={styles.cardContainer}>
-          <TouchableOpacity style={styles.card}>
+          <TouchableOpacity  style={styles.card}onPress={() => navigation.navigate('CardDetalhes')}>
             <Image source={require('../assets/paris.png')} style={styles.cardImage} />
             <Text style={styles.cardTitle}>Paris - França</Text>
             <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
