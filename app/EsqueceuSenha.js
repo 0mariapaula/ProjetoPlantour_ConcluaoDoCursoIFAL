@@ -15,9 +15,11 @@ const navigation = useNavigation();
     <Text style={styles.label3}>Email :</Text>
           <TextInput style={styles.input}/>
           <TouchableOpacity 
+          onPress={() => navigation.navigate('ConfirmacaoOk')}
         style={styles.button}>
         <Text style={styles.buttonTextB}>Enviar Email</Text>
       </TouchableOpacity>
+
       <Text style={styles.buttonTextOU}>OU</Text>
 
       <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
