@@ -12,6 +12,9 @@ const navigation = useNavigation();
         
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Plantour</Text>
+          <TouchableOpacity>
+          <Image source={require('../assets/lupa.png')} style={styles.lupa} />
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.button}>
@@ -192,6 +195,13 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 10,
     marginBottom: 10,
+  },
+  lupa: {
+    width: 30, // Ajuste o tamanho da lupa conforme necessário
+    height: 30, // Ajuste o tamanho da lupa conforme necessário
+    marginBottom: 0,
+    top: 230,
+    left:300,
   },
   cardTitle: {
     fontWeight: 'bold',

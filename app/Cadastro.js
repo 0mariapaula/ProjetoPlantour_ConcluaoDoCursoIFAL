@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native'; 
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from 'expo-router';
 
 const Cadastro = () => {
@@ -13,90 +13,92 @@ const Cadastro = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inputContainer}></View>
-      <Image style={styles.logo} source={require('./../assets/logo.png')} />
+    <KeyboardAvoidingView 
+      style={styles.container} 
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContainer} scrollEnabled={false}>
+        <View style={styles.inputContainer}>
+          <Image style={styles.logo} source={require('./../assets/logo.png')} />
 
-        <Text style={styles.label}>Nome Completo:</Text>
-           <TextInput style={styles.input}/>
+          <Text style={styles.label}>Nome Completo:</Text>
+          <TextInput style={styles.input} />
 
-        <Text style={styles.label}>Email:</Text>
-          <TextInput style={styles.input}/>
+          <Text style={styles.label}>Email:</Text>
+          <TextInput style={styles.input} />
 
-        <Text style={styles.label}>Telefone:</Text>
-          <TextInput style={styles.input}/>
+          <Text style={styles.label}>Telefone:</Text>
+          <TextInput style={styles.input} />
 
-        <Text style={styles.label}>Criar senha :</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Senha"
-              secureTextEntry={true}
-              onChangeText={setPassword}
-            />
+          <Text style={styles.label}>Criar senha :</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Senha"
+            secureTextEntry={true}
+            onChangeText={setPassword}
+          />
 
-        <Text style={styles.label}>Confirmar senha:</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Senha"
-              secureTextEntry={true}
-              onChangeText={setPassword}
-            />
+          <Text style={styles.label}>Confirmar senha:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Senha"
+            secureTextEntry={true}
+            onChangeText={setPassword}
+          />
 
-      <TouchableOpacity 
-        style={styles.button} 
-        onPress={handleLogin}
-      >
-        <Text style={styles.buttonTextB}>Cadastrar</Text>
-      </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={handleLogin}
+          >
+            <Text style={styles.buttonTextB}>Cadastrar</Text>
+          </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('index')}>
-        <Text style={styles.input2}>Possuo cadastro</Text>
-      </TouchableOpacity>
-
-
-
-
-    </View>
+          <TouchableOpacity onPress={() => navigation.navigate('index')}>
+            <Text style={styles.input2}>Possuo cadastro</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#2D9AFF',
+  },
+  scrollContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2D9AFF',
     paddingHorizontal: 20,
-    bottom:370
   },
   inputContainer: {
-    height : '85%',
-    paddingTop: 0,
-    width: '110%',
+    width: '105%',
+    padding: 20,
     backgroundColor: '#fff',
     borderRadius: 25,
-    padding: 20,
-    top:750
+    alignItems: 'center',
   },
   logo: {
     width: 120,
     height: 120,
     marginBottom: 20,
-    bottom:20
   },
   label: {
     marginBottom: 5,
     color: '#000',
-    textAlign: 'justify',
+    textAlign: 'left',
     fontWeight: 'bold',
-    right:100
+    alignSelf: 'flex-start',
   },
   input: {
-    width: '90%',
+    width: '100%',
     height: 50,
     borderWidth: 1,
     borderColor: '#cccccc',
-    borderRadius: 50,
+    borderRadius: 30,
     paddingHorizontal: 10,
     marginBottom: 15,
     backgroundColor: '#D9D9D9',
@@ -109,12 +111,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
-    top:0
-  },
-  rota: {
-    left:110,
-  bottom:50,
-    
   },
   buttonTextB: {
     color: '#fff',
@@ -125,7 +121,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: '#0000FF',
     fontWeight: 'bold',
-    top:20
   },
 });
 
