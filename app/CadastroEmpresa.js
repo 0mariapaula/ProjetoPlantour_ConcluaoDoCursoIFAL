@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from 'expo-router';
 
-const Cadastro = () => {
+const CadastroEmpresa = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,9 +21,10 @@ const Cadastro = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.inputContainer}>
           <Image style={styles.logo} source={require('./../assets/logo.png')} />
-          <Text style={styles.title}>Cadastro de usuário</Text>
+          <Text style={styles.title}>Cadastro de empresa</Text>
 
-          <Text style={styles.label}>Nome Completo:</Text>
+
+          <Text style={styles.label}>CNPJ:</Text>
           <TextInput style={styles.input} />
 
           <Text style={styles.label}>Email:</Text>
@@ -32,7 +33,10 @@ const Cadastro = () => {
           <Text style={styles.label}>Telefone:</Text>
           <TextInput style={styles.input} />
 
-          <Text style={styles.label}>CPF:</Text>
+          <Text style={styles.label}>Endereço:</Text>
+          <TextInput style={styles.input} />
+
+          <Text style={styles.label}>Nome:</Text>
           <TextInput style={styles.input} />
 
           <Text style={styles.label}>Criar senha :</Text>
@@ -80,7 +84,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '100%',
-    height:'100%',
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 25,
@@ -89,12 +92,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 120,
     height: 120,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 24,
-    color: '#000',
-    fontWeight: 'bold',
     marginBottom: 20,
   },
   label: {
@@ -113,6 +110,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 15,
     backgroundColor: '#D9D9D9',
+  },
+  title: {
+    fontSize: 24,
+    color: '#000',
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   button: {
     width: '50%',
@@ -135,4 +138,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Cadastro;
+export default CadastroEmpresa;

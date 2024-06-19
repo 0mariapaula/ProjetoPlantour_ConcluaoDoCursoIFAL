@@ -45,13 +45,16 @@ const LoginScreen = () => {
           <Text style={styles.input2}>Primeiro acesso</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity onPress={() => navigation.navigate('CadastroEmpresa')}>
+          <Text style={styles.input2}>Cadastrar Empresa</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.navigate('EsqueceuSenha')}>
           <Text style={styles.input2}>Esqueceu a senha</Text>
         </TouchableOpacity>
 
         <View style={styles.imglogo}>
-          <Image source={require('./../assets/google.png')} />
-          <Image source={require('./../assets/facebook.png')} />
+          
         </View>
       </View>
     </View>
@@ -104,6 +107,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
+    marginBottom: 20,
   },
   buttonTextB: {
     color: '#fff',
@@ -112,7 +116,7 @@ const styles = StyleSheet.create({
   },
   input2: {
     marginTop: 20,
-    color: '#0000FF',
+    color: '#2D9AFF',
     fontWeight: 'bold',
   },
   imglogo: {
