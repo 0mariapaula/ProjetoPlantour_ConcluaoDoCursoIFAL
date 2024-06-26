@@ -1,15 +1,50 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { useNavigation } from 'expo-router';
 
 const CadastroEmpresa = () => {
   const navigation = useNavigation();
+  const [cnpj, setCnpj] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleLogin = () => {
-    console.log('Email:', email);
-    console.log('Password:', password);
+  const handleRegister = () => {
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    const trimmedAddress = address.trim();
+
+    if (!cnpj || !trimmedEmail || !phone || !trimmedAddress || !trimmedName || !password || !confirmPassword) {
+      Alert.alert('Erro', 'Todos os campos são obrigatórios!');
+      return;
+    }
+    if (!/^\d{14}$/.test(cnpj)) {
+      Alert.alert('Erro', 'CNPJ inválido!');
+      return;
+    }
+    if (!/^\d{10,11}$/.test(phone)) {
+      Alert.alert('Erro', 'Telefone inválido!');
+      return;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert('Erro', 'As senhas não coincidem!');
+      return;
+    }
+
+    console.log('CNPJ:', cnpj);
+    console.log('Email:', trimmedEmail);
+    console.log('Telefone:', phone);
+    console.log('Endereço:', trimmedAddress);
+    console.log('Nome:', trimmedName);
+    console.log('Senha:', password);
+  };
+
+  // Função para aceitar apenas números
+  const handleNumericInput = (input) => {
+    return input.replace(/[^0-9]/g, '');
   };
 
   return (
@@ -23,21 +58,44 @@ const CadastroEmpresa = () => {
           <Image style={styles.logo} source={require('./../assets/logo.png')} />
           <Text style={styles.title}>Cadastro de empresa</Text>
 
-
           <Text style={styles.label}>CNPJ:</Text>
-          <TextInput style={styles.input} />
+          <TextInput
+            style={styles.input}
+            keyboardType="numeric"
+            maxLength={14}
+            onChangeText={(text) => setCnpj(handleNumericInput(text))}
+            value={cnpj}
+          />
 
           <Text style={styles.label}>Email:</Text>
-          <TextInput style={styles.input} />
+          <TextInput 
+            style={styles.input} 
+            onChangeText={setEmail} 
+            value={email} 
+          />
 
           <Text style={styles.label}>Telefone:</Text>
-          <TextInput style={styles.input} />
+          <TextInput
+            style={styles.input}
+            keyboardType="numeric"
+            maxLength={11}
+            onChangeText={(text) => setPhone(handleNumericInput(text))}
+            value={phone}
+          />
 
           <Text style={styles.label}>Endereço:</Text>
-          <TextInput style={styles.input} />
+          <TextInput 
+            style={styles.input} 
+            onChangeText={setAddress} 
+            value={address} 
+          />
 
           <Text style={styles.label}>Nome:</Text>
-          <TextInput style={styles.input} />
+          <TextInput 
+            style={styles.input} 
+            onChangeText={setName} 
+            value={name} 
+          />
 
           <Text style={styles.label}>Criar senha :</Text>
           <TextInput
@@ -45,6 +103,7 @@ const CadastroEmpresa = () => {
             placeholder="Senha"
             secureTextEntry={true}
             onChangeText={setPassword}
+            value={password}
           />
 
           <Text style={styles.label}>Confirmar senha:</Text>
@@ -52,12 +111,13 @@ const CadastroEmpresa = () => {
             style={styles.input}
             placeholder="Confirmar senha"
             secureTextEntry={true}
-            onChangeText={setPassword}
+            onChangeText={setConfirmPassword}
+            value={confirmPassword}
           />
 
           <TouchableOpacity 
             style={styles.button} 
-            onPress={handleLogin}
+            onPress={handleRegister}
           >
             <Text style={styles.buttonTextB}>Cadastrar</Text>
           </TouchableOpacity>
