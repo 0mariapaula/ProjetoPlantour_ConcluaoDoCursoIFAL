@@ -1,63 +1,58 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from 'expo-router';
-
+import BottomNavBar from './BottomNavBar'; // Certifique-se de ajustar o caminho conforme necessário
 
 const Inicio = () => {
-const navigation = useNavigation();
+  const navigation = useNavigation();
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Plantour</Text>
-          <TouchableOpacity>
-          <Image source={require('../assets/lupa.png')} style={styles.lupa} />
-          </TouchableOpacity>
-        </View>
+    <View style={styles.mainContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.container}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Plantour</Text>
+          </View>
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonTextB}>Restaurantes</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.button2}>
-          <Text style={styles.buttonTextB}>Roteiros</Text>
-        </TouchableOpacity>  
-
-        <TouchableOpacity style={styles.button3}>
-          <Text style={styles.buttonTextB}>Hoteis</Text>
-        </TouchableOpacity> 
-
-        <Text style={styles.textoTitulo}>Populares da semana</Text>
-        <Text style={styles.textoTitulo2}>Locais mais visitados no mundo</Text>
-
-
-        {/* Cards */}
-        <View style={styles.cardContainer}>
-          <TouchableOpacity  style={styles.card}onPress={() => navigation.navigate('CardDetalhes')}>
-            <Image source={require('../assets/paris.png')} style={styles.cardImage} />
-            <Text style={styles.cardTitle}>Paris - França</Text>
-            <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.card}>
-            <Image source={require('../assets/maceio.png')} style={styles.cardImage} />
-            <Text style={styles.cardTitle}>Maceió - Brasil</Text>
-            <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.card}>
-            <Image source={require('../assets/paris.png')} style={styles.cardImage} />
-            <Text style={styles.cardTitle}>Paris - França</Text>
-            <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.card}>
-            <Image source={require('../assets/espanha.png')} style={styles.cardImage} />
-            <Text style={styles.cardTitle}>Espanha</Text>
-            <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonTextB}>Restaurantes</Text>
           </TouchableOpacity>
 
-          <Text style={styles.textoTitulo3}>Restaurantes próximos de você</Text>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.carouselContainer}>
+          <TouchableOpacity style={styles.button2}>
+            <Text style={styles.buttonTextB}>Roteiros</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button3}>
+            <Text style={styles.buttonTextB}>Hoteis</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.textoTitulo}>Populares da semana</Text>
+          <Text style={styles.textoTitulo2}>Locais mais visitados no mundo</Text>
+
+          <View style={styles.cardContainer}>
+            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('CardDetalhes')}>
+              <Image source={require('../assets/paris.png')} style={styles.cardImage} />
+              <Text style={styles.cardTitle}>Paris - França</Text>
+              <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.card}>
+              <Image source={require('../assets/maceio.png')} style={styles.cardImage} />
+              <Text style={styles.cardTitle}>Maceió - Brasil</Text>
+              <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.card}>
+              <Image source={require('../assets/paris.png')} style={styles.cardImage} />
+              <Text style={styles.cardTitle}>Paris - França</Text>
+              <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.card}>
+              <Image source={require('../assets/espanha.png')} style={styles.cardImage} />
+              <Text style={styles.cardTitle}>Espanha</Text>
+              <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+            </TouchableOpacity>
+
+            <Text style={styles.textoTitulo3}>Restaurantes próximos de você</Text>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.carouselContainer}>
               <TouchableOpacity style={styles.cardCarousel}>
                 <Image source={require('../assets/LePetit.png')} style={styles.cardImageCarrossel} />
                 <Text style={styles.cardTitle}>Lê Petit</Text>
@@ -72,26 +67,32 @@ const navigation = useNavigation();
                 <Image source={require('../assets/LePetit.png')} style={styles.cardImageCarrossel} />
                 <Text style={styles.cardTitle}>Lê Petit</Text>
                 <Text style={styles.cardDescription}>0,3 km.</Text>
-              
               </TouchableOpacity>
             </ScrollView>
-
-
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+      <BottomNavBar />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 70, // Espacinho extra para a barra de navegação
+  },
+  container: {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FFFFFF',
   },
   inputContainer: {
-    height: '45%',
+    height: '23%',
     paddingTop: 0,
     width: '100%',
     backgroundColor: '#2D9AFF',
@@ -173,17 +174,17 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     fontWeight: 'bold',
     fontSize: 25,
-    top: 260,
+    top: 80,
   },
   cardContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap', // Permite que os cards sejam automaticamente posicionados em várias linhas
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
     marginTop: 20,
     bottom: 280,
   },
   card: {
-    width: '50%', // Ajuste o tamanho dos cards para ocupar metade do espaço disponível na linha
+    width: '50%',
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
     padding: 20,
@@ -195,13 +196,6 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 10,
     marginBottom: 10,
-  },
-  lupa: {
-    width: 30, // Ajuste o tamanho da lupa conforme necessário
-    height: 30, // Ajuste o tamanho da lupa conforme necessário
-    marginBottom: 0,
-    top: 230,
-    left:300,
   },
   cardTitle: {
     fontWeight: 'bold',
@@ -218,16 +212,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   cardCarousel: {
-    width: 170, // Ajuste o tamanho dos cards conforme necessário
+    width: 170,
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',
-    marginRight: 10, // Margem à direita de cada card
-    marginLeft: 10, // Margem à esquerda de cada card
+    marginRight: 10,
+    marginLeft: 10,
   },
-  
-  
 });
 
 export default Inicio;
