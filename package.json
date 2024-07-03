@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-picker/picker": "^2.7.7",
     "@react-navigation/native": "^6.1.17",
     "expo": "^51.0.14",
     "expo-constants": "^16.0.2",
+    "expo-image-picker": "~15.0.6",
     "expo-linking": "^6.3.1",
     "expo-router": "~3.5.17",
     "expo-status-bar": "^1.12.1",
