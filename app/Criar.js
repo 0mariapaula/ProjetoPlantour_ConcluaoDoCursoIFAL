@@ -4,12 +4,16 @@ import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
 
 const Criar = () => {
-  const [nome, setNome] = useState('');
+  const [titulo, setTitulo] = useState('');
   const [valor, setValor] = useState('');
   const [descricao, setDescricao] = useState('');
   const [imagem, setImagem] = useState(null);
   const [endereco, setEndereco] = useState('');
   const [tipo, setTipo] = useState('');
+  // Novos campos para o tipo "Passeio"
+  const [data, setData] = useState('');
+  const [horario, setHorario] = useState('');
+  const [limitePessoas, setLimitePessoas] = useState('');
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -26,7 +30,7 @@ const Criar = () => {
 
   const handlePost = () => {
     // Handle the post logic here
-    console.log({ nome, valor, descricao, imagem, endereco, tipo });
+    console.log({ nome, valor, descricao, imagem, endereco, tipo, titulo, data, horario, limitePessoas });
     // Reset the form fields
     setNome('');
     setValor('');
@@ -34,6 +38,10 @@ const Criar = () => {
     setImagem(null);
     setEndereco('');
     setTipo('');
+    setTitulo('');
+    setData('');
+    setHorario('');
+    setLimitePessoas('');
   };
 
   return (
@@ -50,12 +58,12 @@ const Criar = () => {
         </TouchableOpacity>
 
         <TextInput
-          style={styles.input}
-          placeholder="Nome"
-          value={nome}
-          onChangeText={setNome}
-          placeholderTextColor="#888"
-        />
+              style={styles.input}
+              placeholder="Título"
+              value={titulo}
+              onChangeText={setTitulo}
+              placeholderTextColor="#888"
+            />
 
         <TextInput
           style={styles.input}
@@ -95,8 +103,41 @@ const Criar = () => {
             <Picker.Item label="Bar" value="bar" />
             <Picker.Item label="Ponto Turístico" value="Ponto Turístico" />
             <Picker.Item label="Cafeteria" value="cafeteria" />
+            <Picker.Item label="Passeio" value="Passeio" />
           </Picker>
         </View>
+
+        {/* Campos adicionais para o tipo "Passeio" */}
+        {tipo === 'Passeio' && (
+          <>
+           
+
+            <TextInput
+              style={styles.input}
+              placeholder="Data"
+              value={data}
+              onChangeText={setData}
+              placeholderTextColor="#888"
+            />
+
+            <TextInput
+              style={styles.input}
+              placeholder="Horário"
+              value={horario}
+              onChangeText={setHorario}
+              placeholderTextColor="#888"
+            />
+
+            <TextInput
+              style={styles.input}
+              placeholder="Limite de Pessoas"
+              value={limitePessoas}
+              onChangeText={setLimitePessoas}
+              keyboardType="numeric"
+              placeholderTextColor="#888"
+            />
+          </>
+        )}
 
         <TouchableOpacity onPress={handlePost} style={styles.button}>
           <Text style={styles.buttonText}>Postar</Text>
