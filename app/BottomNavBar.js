@@ -1,10 +1,9 @@
-// BottomNavBar.js
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome, Entypo, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 
-const BottomNavBar = () => {
+const BottomNavBar = ({ openSearchModal }) => {
   const navigation = useNavigation();
 
   return (
@@ -13,7 +12,7 @@ const BottomNavBar = () => {
         <FontAwesome name="home" size={24} color="black" />
         <Text style={styles.navText}>Explorar</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Buscar')}>
+      <TouchableOpacity style={styles.navButton} onPress={openSearchModal}>
         <FontAwesome name="search" size={24} color="black" />
         <Text style={styles.navText}>Buscar</Text>
       </TouchableOpacity>

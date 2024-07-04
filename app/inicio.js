@@ -1,10 +1,20 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Modal, TextInput } from 'react-native';
 import { useNavigation } from 'expo-router';
 import BottomNavBar from './BottomNavBar'; // Certifique-se de ajustar o caminho conforme necessário
 
 const Inicio = () => {
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const openSearchModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeSearchModal = () => {
+    setModalVisible(false);
+  };
 
   return (
     <View style={styles.mainContainer}>
@@ -72,7 +82,35 @@ const Inicio = () => {
           </View>
         </View>
       </ScrollView>
-      <BottomNavBar />
+      <BottomNavBar openSearchModal={openSearchModal} />
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeSearchModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Pesquisar..."
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholderTextColor="#888"
+            />
+            <TouchableOpacity style={styles.searchButton} onPress={() => {
+              // Ação de pesquisa (você pode definir a lógica de pesquisa aqui)
+              closeSearchModal();
+            }}>
+              <Text style={styles.searchButtonText}>Pesquisar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.closeButton} onPress={closeSearchModal}>
+              <Text style={styles.closeButtonText}>Fechar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -219,6 +257,52 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 10,
     marginLeft: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  searchInput: {
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#007BFF',
+    borderRadius: 10,
+    marginBottom: 20,
+    backgroundColor: '#FFFFFF',
+    color: '#333',
+  },
+  searchButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  searchButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  closeButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  closeButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
