@@ -9,11 +9,11 @@ const CardDetalhes = () => {
     </View>
     <View style={styles.cardContainer}>
 
-        <TouchableOpacity  style={styles.card}onPress={() => navigation.navigate('CardDetalhes')}>
+        <View  style={styles.card}onPress={() => navigation.navigate('CardDetalhes')}>
             <Image source={require('../assets/paris.png')} style={styles.cardImage} />
             <Text style={styles.cardTitle}>Paris - França</Text>
             <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-        </TouchableOpacity>
+        </View>
 
     </View>
 
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2D9AFF',
     borderRadius: 0,
     padding: 20,
-    bottom: 250,
+    bottom: 200,
   },
   text: {
     fontSize: 24,
@@ -47,6 +47,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 20,
     bottom: 200,
+  },
+  cardTitle: {
+    fontWeight: 'bold',
+    fontSize: 23,
+    marginTop: -10,
+  },
+  cardImage: {
+    width: 350,
+    height: 200,
+    borderRadius: 10,
+    marginBottom: 10,
   },
   card: {
     width: '50%', // Ajuste o tamanho dos cards para ocupar metade do espaço disponível na linha
