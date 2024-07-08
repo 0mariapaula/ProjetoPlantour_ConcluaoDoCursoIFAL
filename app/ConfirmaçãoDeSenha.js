@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from 'expo-router';
 
 const ConfirmaçãoDeSenha = () => {
@@ -8,9 +8,19 @@ const ConfirmaçãoDeSenha = () => {
   const [confirmarSenha, setConfirmarSenha] = useState('');
 
   const handleUpdatePassword = () => {
-    // Aqui você pode adicionar a lógica para atualizar a senha
-    console.log('Nova Senha:', novaSenha);
-    console.log('Confirmar Senha:', confirmarSenha);
+    const trimmedNovaSenha = novaSenha.trim();
+    const trimmedConfirmarSenha = confirmarSenha.trim();
+
+    if (trimmedNovaSenha !== trimmedConfirmarSenha) {
+      Alert.alert("Erro", "As senhas não coincidem. Por favor, tente novamente.");
+    } else if (!trimmedNovaSenha || !trimmedConfirmarSenha) {
+      Alert.alert("Erro", "As senhas não podem ser apenas espaços em branco.");
+    } else {
+      // Aqui você pode adicionar a lógica para atualizar a senha
+      console.log('Nova Senha:', trimmedNovaSenha);
+      console.log('Confirmar Senha:', trimmedConfirmarSenha);
+      Alert.alert("Sucesso", "Senha atualizada com sucesso!");
+    }
   };
 
   return (
@@ -119,7 +129,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
-    
   },
 });
 
