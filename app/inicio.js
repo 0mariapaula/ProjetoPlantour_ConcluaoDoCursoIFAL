@@ -22,6 +22,9 @@ const Inicio = () => {
         <View style={styles.container}>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Plantour</Text>
+            <TouchableOpacity>
+        <Image source={require('../assets/configuracao.png')} style={styles.configuracao} />
+        </TouchableOpacity>
           </View>
 
           <TouchableOpacity style={styles.button}>
@@ -137,6 +140,12 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     padding: 20,
     top: 10,
+  },
+  configuracao: {
+    left:320,
+    width:30,
+    height:30,
+    top:40,
   },
   button: {
     width: '45%',

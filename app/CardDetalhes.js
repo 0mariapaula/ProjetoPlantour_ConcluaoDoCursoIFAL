@@ -1,71 +1,106 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
 
 const CardDetalhes = () => {
   return (
-    <View style={styles.container}>
-        
-    <View style={styles.inputContainer}>
-    </View>
-    <View style={styles.cardContainer}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.inputContainer}>
 
-        <View  style={styles.card}onPress={() => navigation.navigate('CardDetalhes')}>
-            <Image source={require('../assets/paris.png')} style={styles.cardImage} />
+        <TouchableOpacity>
+        <Image source={require('../assets/seta.png')} style={styles.seta} />
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+        <Image source={require('../assets/configuracao.png')} style={styles.configuracao} />
+        </TouchableOpacity>
+
+        {/* Adicione outros conteúdos aqui, se necessário */}
+      </View>
+      <View style={styles.cardContainer}>
+        <View style={styles.card}>
+          <Image source={require('../assets/paris.png')} style={styles.cardImage} />
+          <View style={styles.cardContent}>
             <Text style={styles.cardTitle}>Paris - França</Text>
-            <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
+            <Text style={styles.cardSubtitle}>Endereço: Champs-Élysées</Text>
+            <Text style={styles.cardSubtitle}>Bairro: 8th arrondissement</Text>
+            <Text style={styles.cardSubtitle}>Cidade: Paris</Text>
+            <Text style={styles.cardSubtitle}>Estado: Île-de-France</Text>
+            <Text style={styles.cardSubtitle}>País: França</Text>
+            <Text style={styles.cardDescription}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada.
+            </Text>
+          </View>
         </View>
-
-    </View>
-
-   
-    </View>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#F5F5F5',
   },
   inputContainer: {
-    height: '10%',
-    paddingTop: 0,
-    width: '100%',
+    height: 80,
+    width: '113%',
     backgroundColor: '#2D9AFF',
-    borderRadius: 0,
-    padding: 20,
-    bottom: 200,
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    bottom:20,
   },
   cardContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap', // Permite que os cards sejam automaticamente posicionados em várias linhas
-    justifyContent: 'space-between',
-    marginTop: 20,
-    bottom: 200,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  card: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
+    marginBottom: 20,
+  },
+  cardImage: {
+    width: '100%',
+    height: 200,
+  },
+  seta: {
+    right: 150,
+    position: 'absolute',
+  },
+  configuracao: {
+    left:160,
+    width:30,
+    height:30,
+  },
+  cardContent: {
+    padding: 20,
   },
   cardTitle: {
     fontWeight: 'bold',
-    fontSize: 23,
-    marginTop: -10,
-  },
-  cardImage: {
-    width: 350,
-    height: 200,
-    borderRadius: 10,
+    fontSize: 24,
     marginBottom: 10,
+    color: '#333',
   },
-  card: {
-    width: '50%', // Ajuste o tamanho dos cards para ocupar metade do espaço disponível na linha
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
-    marginBottom: 20,
+  cardSubtitle: {
+    fontSize: 18,
+    marginBottom: 5,
+    color: '#555',
+  },
+  cardDescription: {
+    fontSize: 16,
+    marginTop: 10,
+    color: '#666',
   },
 });
 
