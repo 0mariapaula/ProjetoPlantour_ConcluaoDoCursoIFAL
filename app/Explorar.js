@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Modal, TextInput } from 'react-native';
 import { useNavigation } from 'expo-router';
 import BottomNavBar from './BottomNavBar'; // Certifique-se de ajustar o caminho conforme necessário
+import Icon from 'react-native-vector-icons/FontAwesome'; // Importando ícones do FontAwesome
 
 const Explorar = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [configModalVisible, setConfigModalVisible] = useState(false); // Estado para o modal de configurações
 
   const openSearchModal = () => {
     setModalVisible(true);
@@ -16,13 +18,21 @@ const Explorar = () => {
     setModalVisible(false);
   };
 
+  const openConfigModal = () => {
+    setConfigModalVisible(true);
+  };
+
+  const closeConfigModal = () => {
+    setConfigModalVisible(false);
+  };
+
   return (
     <View style={styles.mainContainer}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.container}>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Plantour</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={openConfigModal}>
               <Image source={require('../assets/configuracao.png')} style={styles.configuracao} />
             </TouchableOpacity>
           </View>
@@ -109,6 +119,49 @@ const Explorar = () => {
               <Text style={styles.searchButtonText}>Pesquisar</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.closeButton} onPress={closeSearchModal}>
+              <Text style={styles.closeButtonText}>Fechar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={configModalVisible}
+        onRequestClose={closeConfigModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
+              <Icon name="moon-o" size={20} color="#000" style={styles.configIcon} />
+              <Text style={styles.configOptionText}>Modo escuro</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
+              <Icon name="user" size={20} color="#000" style={styles.configIcon} />
+              <Text style={styles.configOptionText}>Conta</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
+              <Icon name="heart" size={20} color="#000" style={styles.configIcon} />
+              <Text style={styles.configOptionText}>Favoritos</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
+              <Icon name="lock" size={20} color="#000" style={styles.configIcon} />
+              <Text style={styles.configOptionText}>Privacidade e Segurança</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
+              <Icon name="bell" size={20} color="#000" style={styles.configIcon} />
+              <Text style={styles.configOptionText}>Notificações</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
+              <Icon name="question-circle" size={20} color="#000" style={styles.configIcon} />
+              <Text style={styles.configOptionText}>Ajuda e Feedback</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.configOption, { borderColor: 'red' }]} onPress={closeConfigModal}>
+              <Icon name="sign-out" size={20} color="red" style={styles.configIcon} />
+              <Text style={[styles.configOptionText, { color: 'red' }]}>Sair</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.closeButton} onPress={closeConfigModal}>
               <Text style={styles.closeButtonText}>Fechar</Text>
             </TouchableOpacity>
           </View>
@@ -312,6 +365,21 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  configOption: {
+    width: '100%',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#DDD',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  configOptionText: {
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  configIcon: {
+    marginRight: 10,
   },
 });
 

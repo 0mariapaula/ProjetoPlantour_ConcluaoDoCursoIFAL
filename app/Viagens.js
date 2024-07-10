@@ -12,6 +12,9 @@ const Viagens = ({ openSearchModal }) => {
         <Text style={styles.headerText}>Plantour</Text>
       </View>
       <View style={styles.contentContainer}>
+        <View>
+        <Text style={styles.roteiros}>Meus Roteiros</Text>
+        </View>
         <Botao 
           texto="Criar roteiro" 
           icone={{ uri: 'https://img.icons8.com/ios/452/clipboard.png' }} 
@@ -64,6 +67,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     right: 140,
+  },
+  roteiros: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: 'bold',
+    right: 110,
+    bottom: 380,
+    
   },
   contentContainer: {
     flex: 1,
