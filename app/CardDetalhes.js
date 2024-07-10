@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
+import { useNavigation } from 'expo-router';
+
 
 const CardDetalhes = () => {
+  const navigation = useNavigation();
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.inputContainer}>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Explorar')}>
         <Image source={require('../assets/seta.png')} style={styles.seta} />
         </TouchableOpacity>
 
