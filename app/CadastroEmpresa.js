@@ -2,29 +2,31 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { useNavigation } from 'expo-router';
 
-const Cadastro = () => {
+const CadastroEmpresa = () => {
   const navigation = useNavigation();
-  const [name, setName] = useState('');
+  const [cnpj, setCnpj] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [cpf, setCpf] = useState('');
+  const [address, setAddress] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleLogin = () => {
+  const handleRegister = () => {
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
+    const trimmedAddress = address.trim();
 
-    if (!trimmedName || !trimmedEmail || !phone || !cpf || !password || !confirmPassword) {
+    if (!cnpj || !trimmedEmail || !phone || !trimmedAddress || !trimmedName || !password || !confirmPassword) {
       Alert.alert('Erro', 'Todos os campos são obrigatórios!');
+      return;
+    }
+    if (!/^\d{14}$/.test(cnpj)) {
+      Alert.alert('Erro', 'CNPJ inválido!');
       return;
     }
     if (!/^\d{10,11}$/.test(phone)) {
       Alert.alert('Erro', 'Telefone inválido!');
-      return;
-    }
-    if (!/^\d{11}$/.test(cpf)) {
-      Alert.alert('Erro', 'CPF inválido!');
       return;
     }
     if (password !== confirmPassword) {
@@ -32,10 +34,11 @@ const Cadastro = () => {
       return;
     }
 
-    console.log('Nome:', trimmedName);
+    console.log('CNPJ:', cnpj);
     console.log('Email:', trimmedEmail);
     console.log('Telefone:', phone);
-    console.log('CPF:', cpf);
+    console.log('Endereço:', trimmedAddress);
+    console.log('Nome:', trimmedName);
     console.log('Senha:', password);
   };
 
@@ -53,13 +56,15 @@ const Cadastro = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.inputContainer}>
           <Image style={styles.logo} source={require('./../assets/logo.png')} />
-          <Text style={styles.title}>Cadastro de usuário</Text>
+          <Text style={styles.title}>Cadastro de empresa</Text>
 
-          <Text style={styles.label}>Nome Completo:</Text>
-          <TextInput 
-            style={styles.input} 
-            onChangeText={setName} 
-            value={name} 
+          <Text style={styles.label}>CNPJ:</Text>
+          <TextInput
+            style={styles.input}
+            keyboardType="numeric"
+            maxLength={14}
+            onChangeText={(text) => setCnpj(handleNumericInput(text))}
+            value={cnpj}
           />
 
           <Text style={styles.label}>Email:</Text>
@@ -78,13 +83,18 @@ const Cadastro = () => {
             value={phone}
           />
 
-          <Text style={styles.label}>CPF:</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            maxLength={11}
-            onChangeText={(text) => setCpf(handleNumericInput(text))}
-            value={cpf}
+          <Text style={styles.label}>Endereço:</Text>
+          <TextInput 
+            style={styles.input} 
+            onChangeText={setAddress} 
+            value={address} 
+          />
+
+          <Text style={styles.label}>Nome:</Text>
+          <TextInput 
+            style={styles.input} 
+            onChangeText={setName} 
+            value={name} 
           />
 
           <Text style={styles.label}>Criar senha :</Text>
@@ -107,7 +117,7 @@ const Cadastro = () => {
 
           <TouchableOpacity 
             style={styles.button} 
-            onPress={handleLogin}
+            onPress={handleRegister}
           >
             <Text style={styles.buttonTextB}>Cadastrar</Text>
           </TouchableOpacity>
@@ -134,7 +144,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '100%',
-    height: '100%',
     padding: 20,
     backgroundColor: '#fff',
     borderRadius: 25,
@@ -143,12 +152,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 120,
     height: 120,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 24,
-    color: '#000',
-    fontWeight: 'bold',
     marginBottom: 20,
   },
   label: {
@@ -167,6 +170,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 15,
     backgroundColor: '#D9D9D9',
+  },
+  title: {
+    fontSize: 24,
+    color: '#000',
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   button: {
     width: '50%',
@@ -189,4 +198,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Cadastro;
+export default CadastroEmpresa;

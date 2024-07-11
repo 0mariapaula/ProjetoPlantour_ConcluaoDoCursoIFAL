@@ -5,6 +5,10 @@ import EsqueceuSenha from './app/components/EsqueceuSenha';
 import LoginScreen from './app/components/LoginScreen';
 import inicio from './app/inicio';
 import CardDetalhes from './app/CardDetalhes';
+import ConfirmacaoOk from './app/ConfirmacaoOk';
+import ConfirmaçãoDeSenha from './app/ConfirmaçãoDeSenha';
+import CadastroEmpresa from './app/CadastroEmpresa';
+
 const App = () => {
   return (
     <NativeRouter>
@@ -13,6 +17,9 @@ const App = () => {
       <Route path="/esqueceuSenha" component={EsqueceuSenha} />
       <Route path="/inicio" component={inicio} />
       <Route path="/CardDetalhes" component={CardDetalhes} />
+      <Route path="/ConfirmacaoOk" component={ConfirmacaoOk} />
+      <Route path="/ConfirmaçãoDeSenha" component={ConfirmaçãoDeSenha} />
+      <Route path="/CadastroEmpresa" component={CadastroEmpresa} />
     </NativeRouter>
   );
 };

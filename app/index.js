@@ -13,48 +13,50 @@ const LoginScreen = () => {
   };
 
   return (
+    
     <View style={styles.container}>
-          <View style={styles.inputContainer}></View>
+      <View style={styles.inputContainer}>
+        <Image style={styles.logo} source={require('./../assets/logo.png')} />
 
+        <Text style={styles.label}>Usuário</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+        />
 
-      <Image style={styles.logo} source={require('./../assets/logo.png')} />
+        <Text style={styles.label}>Senha</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Senha"
+          secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
+        />
 
-      <Text style={styles.label}>Usuário</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email" 
-        value={email}
-        onChangeText={setEmail}
-      />
+        <TouchableOpacity 
+          style={styles.button} 
+          onPress={() => navigation.navigate('Explorar')}>
+          <Text style={styles.buttonTextB}>Entrar</Text>
+        </TouchableOpacity>
 
-      <Text style={styles.label}>Senha</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Senha"
-        secureTextEntry={true}
-        value={password}
-        onChangeText={setPassword}
-      />
+        <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
+          <Text style={styles.input2}>Primeiro acesso</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity 
-        style={styles.button} 
-        onPress={() => navigation.navigate('inicio')}>
-        <Text style={styles.buttonTextB}>Entrar</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('CadastroEmpresa')}>
+          <Text style={styles.input2}>Cadastrar Empresa</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
-        <Text style={styles.input2}>Primeiro acesso</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('EsqueceuSenha')}>
+          <Text style={styles.input2}>Esqueceu a senha</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('EsqueceuSenha')}>
-        <Text style={styles.input2}>Esqueceu a senha</Text>
-      </TouchableOpacity>
-
-      <View style={styles.imglogo}>
-        <Image source={require('./../assets/google.png')} />
-        <Image source={require('./../assets/facebook.png')} />
+        <View style={styles.imglogo}>
+          
+        </View>
       </View>
-
     </View>
   );
 };
@@ -66,16 +68,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#2D9AFF',
     paddingHorizontal: 20,
-    bottom:350
   },
   inputContainer: {
-    height : '85%',
-    paddingTop: 0,
-    width: '110%',
+    width: '100%',
+    padding: 20,
     backgroundColor: '#fff',
     borderRadius: 25,
-    padding: 20,
-    top:760
+    alignItems: 'center',
+    
   },
   logo: {
     width: 120,
@@ -85,12 +85,12 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 5,
     color: '#000',
-    textAlign: 'justify',
+    textAlign: 'left',
     fontWeight: 'bold',
-    right:120
+    alignSelf: 'flex-start',
   },
   input: {
-    width: '90%',
+    width: '100%',
     height: 50,
     borderWidth: 1,
     borderColor: '#cccccc',
@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
+    marginBottom: 20,
   },
   buttonTextB: {
     color: '#fff',
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
   },
   input2: {
     marginTop: 20,
-    color: '#0000FF',
+    color: '#2D9AFF',
     fontWeight: 'bold',
   },
   imglogo: {

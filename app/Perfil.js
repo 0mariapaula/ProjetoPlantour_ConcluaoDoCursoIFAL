@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const Inicio = () => {
+const Perfil = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Tela de Início</Text>
+      <Text style={styles.text}>Tela Perfil</Text>
     </View>
   );
 };
@@ -22,4 +22,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Inicio;
+export default Perfil;
+

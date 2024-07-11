@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const Inicio = () => {
+const Buscar = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Tela de Início</Text>
+      <Text style={styles.text}>Tela Buscar</Text>
     </View>
   );
 };
@@ -22,4 +22,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Inicio;
+export default Buscar;
