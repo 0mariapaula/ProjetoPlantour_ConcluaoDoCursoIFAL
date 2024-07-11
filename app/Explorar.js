@@ -1,14 +1,23 @@
+// Explorar.js
+
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Modal, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Modal, TextInput, FlatList, ActivityIndicator } from 'react-native';
 import { useNavigation } from 'expo-router';
-import BottomNavBar from './BottomNavBar'; // Certifique-se de ajustar o caminho conforme necessário
-import Icon from 'react-native-vector-icons/FontAwesome'; // Importando ícones do FontAwesome
+import BottomNavBar from './BottomNavBar';
+import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import FiltroEstadoCidade from './FiltroEstadoCidade'; // Importando o componente de filtro
+
+const API_KEY = 'AIzaSyAACgV5Ok9n-HsESqMo9d8cRGAiHFlOEAY'; // Substitua pela sua chave de API do Google Places
 
 const Explorar = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [configModalVisible, setConfigModalVisible] = useState(false); // Estado para o modal de configurações
+  const [configModalVisible, setConfigModalVisible] = useState(false);
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [filtro, setFiltro] = useState({ estado: '', cidade: '' }); // Estado inicial do filtro
 
   const openSearchModal = () => {
     setModalVisible(true);
@@ -26,6 +35,43 @@ const Explorar = () => {
     setConfigModalVisible(false);
   };
 
+  const fetchPlaces = async () => {
+    if (!searchQuery.trim()) {
+      alert('Por favor, insira um termo de pesquisa.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      let query = `${searchQuery}`;
+      console.log(`Iniciando pesquisa para: ${query}`);
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${API_KEY}`
+      );
+      console.log('Resposta da API:', response.data);
+      if (response.data.status === 'OK') {
+        setResults(response.data.results);
+        response.data.results.forEach((item) => {
+          console.log('Resultado:', JSON.stringify(item, null, 2));
+        });
+      } else {
+        console.error('Erro na resposta da API:', response.data.status);
+        alert(`Erro na pesquisa: ${response.data.status}`);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar locais:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFilterChange = (filtroSelecionado) => {
+    setFiltro(filtroSelecionado);
+    // Lógica para aplicar o filtro na busca
+    console.log('Novo filtro selecionado:', filtroSelecionado);
+    // Aqui você pode adicionar a lógica para refazer a busca com base nos filtros selecionados
+  };
+
   return (
     <View style={styles.mainContainer}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -37,136 +83,18 @@ const Explorar = () => {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonTextB}>Restaurantes</Text>
+          {/* Componente de filtro */}
+          <FiltroEstadoCidade onFilterChange={handleFilterChange} />
+
+          {/* Restante do conteúdo da tela */}
+          <TouchableOpacity style={styles.button} onPress={openSearchModal}>
+            <Text style={styles.buttonTextB}>Pesquisar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button2}>
-            <Text style={styles.buttonTextB}>Roteiros</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.button3}>
-            <Text style={styles.buttonTextB}>Hoteis</Text>
-          </TouchableOpacity>
-
-          <Text style={styles.textoTitulo}>Populares da semana</Text>
-          <Text style={styles.textoTitulo2}>Locais mais visitados no mundo</Text>
-
-          <View style={styles.cardContainer}>
-            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('CardDetalhes')}>
-              <Image source={require('../assets/paris.png')} style={styles.cardImage} />
-              <Text style={styles.cardTitle}>Paris - França</Text>
-              <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.card}>
-              <Image source={require('../assets/maceio.png')} style={styles.cardImage} />
-              <Text style={styles.cardTitle}>Maceió - Brasil</Text>
-              <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.card}>
-              <Image source={require('../assets/paris.png')} style={styles.cardImage} />
-              <Text style={styles.cardTitle}>Paris - França</Text>
-              <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.card}>
-              <Image source={require('../assets/espanha.png')} style={styles.cardImage} />
-              <Text style={styles.cardTitle}>Espanha</Text>
-              <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-            </TouchableOpacity>
-
-            <Text style={styles.textoTitulo3}>Restaurantes próximos de você</Text>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.carouselContainer}>
-              <TouchableOpacity style={styles.cardCarousel}>
-                <Image source={require('../assets/LePetit.png')} style={styles.cardImageCarrossel} />
-                <Text style={styles.cardTitle}>Lê Petit</Text>
-                <Text style={styles.cardDescription}>A cidade da luz e do amor.</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.cardCarousel}>
-                <Image source={require('../assets/LePetit.png')} style={styles.cardImageCarrossel} />
-                <Text style={styles.cardTitle}>Lê Petit</Text>
-                <Text style={styles.cardDescription}>Coração tecnológico do Japão.</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.cardCarousel}>
-                <Image source={require('../assets/LePetit.png')} style={styles.cardImageCarrossel} />
-                <Text style={styles.cardTitle}>Lê Petit</Text>
-                <Text style={styles.cardDescription}>0,3 km.</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
+          {/* Adicione aqui o restante do conteúdo da sua tela */}
         </View>
       </ScrollView>
-      <BottomNavBar openSearchModal={openSearchModal} />
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeSearchModal}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Pesquisar..."
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholderTextColor="#888"
-            />
-            <TouchableOpacity style={styles.searchButton} onPress={() => {
-              // Ação de pesquisa (você pode definir a lógica de pesquisa aqui)
-              closeSearchModal();
-            }}>
-              <Text style={styles.searchButtonText}>Pesquisar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.closeButton} onPress={closeSearchModal}>
-              <Text style={styles.closeButtonText}>Fechar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={configModalVisible}
-        onRequestClose={closeConfigModal}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
-              <Icon name="moon-o" size={20} color="#000" style={styles.configIcon} />
-              <Text style={styles.configOptionText}>Modo escuro</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
-              <Icon name="user" size={20} color="#000" style={styles.configIcon} />
-              <Text style={styles.configOptionText}>Conta</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
-              <Icon name="heart" size={20} color="#000" style={styles.configIcon} />
-              <Text style={styles.configOptionText}>Favoritos</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
-              <Icon name="lock" size={20} color="#000" style={styles.configIcon} />
-              <Text style={styles.configOptionText}>Privacidade e Segurança</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
-              <Icon name="bell" size={20} color="#000" style={styles.configIcon} />
-              <Text style={styles.configOptionText}>Notificações</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
-              <Icon name="question-circle" size={20} color="#000" style={styles.configIcon} />
-              <Text style={styles.configOptionText}>Ajuda e Feedback</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.configOption, { borderColor: 'red' }]} onPress={closeConfigModal}>
-              <Icon name="sign-out" size={20} color="red" style={styles.configIcon} />
-              <Text style={[styles.configOptionText, { color: 'red' }]}>Sair</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.closeButton} onPress={closeConfigModal}>
-              <Text style={styles.closeButtonText}>Fechar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <BottomNavBar />
     </View>
   );
 };
@@ -359,8 +287,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#007BFF',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 20,
-    top:13,
+    borderRadius: 10,
   },
   closeButtonText: {
     color: '#FFFFFF',
@@ -383,5 +310,4 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
 });
-
 export default Explorar;
