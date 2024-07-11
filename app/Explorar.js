@@ -359,7 +359,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#007BFF',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 10,
+    borderRadius: 20,
+    top:13,
   },
   closeButtonText: {
     color: '#FFFFFF',
