@@ -11,7 +11,7 @@ const Cadastro = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleLogin = () => {
+  const handleCadastro = () => {
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
 
@@ -37,9 +37,10 @@ const Cadastro = () => {
     console.log('Telefone:', phone);
     console.log('CPF:', cpf);
     console.log('Senha:', password);
+
+    // Aqui você pode adicionar a lógica para enviar os dados para o servidor, por exemplo
   };
 
-  // Função para aceitar apenas números
   const handleNumericInput = (input) => {
     return input.replace(/[^0-9]/g, '');
   };
@@ -60,6 +61,7 @@ const Cadastro = () => {
             style={styles.input} 
             onChangeText={setName} 
             value={name} 
+            placeholder="Digite seu nome completo"
           />
 
           <Text style={styles.label}>Email:</Text>
@@ -67,6 +69,7 @@ const Cadastro = () => {
             style={styles.input} 
             onChangeText={setEmail} 
             value={email} 
+            placeholder="Digite seu email"
           />
 
           <Text style={styles.label}>Telefone:</Text>
@@ -76,6 +79,7 @@ const Cadastro = () => {
             maxLength={11}
             onChangeText={(text) => setPhone(handleNumericInput(text))}
             value={phone}
+            placeholder="Digite seu telefone"
           />
 
           <Text style={styles.label}>CPF:</Text>
@@ -85,12 +89,13 @@ const Cadastro = () => {
             maxLength={11}
             onChangeText={(text) => setCpf(handleNumericInput(text))}
             value={cpf}
+            placeholder="Digite seu CPF"
           />
 
           <Text style={styles.label}>Criar senha :</Text>
           <TextInput
             style={styles.input}
-            placeholder="Senha"
+            placeholder="Digite sua senha"
             secureTextEntry={true}
             onChangeText={setPassword}
             value={password}
@@ -99,7 +104,7 @@ const Cadastro = () => {
           <Text style={styles.label}>Confirmar senha:</Text>
           <TextInput
             style={styles.input}
-            placeholder="Confirmar senha"
+            placeholder="Confirme sua senha"
             secureTextEntry={true}
             onChangeText={setConfirmPassword}
             value={confirmPassword}
@@ -107,19 +112,20 @@ const Cadastro = () => {
 
           <TouchableOpacity 
             style={styles.button} 
-            onPress={handleLogin}
+            onPress={handleCadastro}
           >
             <Text style={styles.buttonTextB}>Cadastrar</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate('index')}>
-            <Text style={styles.input2}>Possuo cadastro</Text>
+            <Text style={styles.input2}>Já possui cadastro? Faça login.</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

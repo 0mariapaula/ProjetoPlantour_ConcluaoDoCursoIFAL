@@ -1,9 +1,37 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput, Alert } from 'react-native';
 import { useNavigation } from 'expo-router';
 
 const EsqueceuSenha = () => {
   const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+
+  const sendPasswordResetEmail = async () => {
+    // Simulação de envio assíncrono (substitua com a lógica real de envio de e-mail)
+    try {
+      // Simular um tempo de espera de 2 segundos
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Aqui você chamaria sua API ou serviço para enviar o e-mail de recuperação
+      Alert.alert('Sucesso', `Um e-mail de recuperação foi enviado para ${email}`);
+
+      // Navegar para a tela de confirmação após o envio do e-mail
+      navigation.navigate('ConfirmacaoOk');
+    } catch (error) {
+      console.error('Erro ao enviar e-mail de recuperação:', error);
+      Alert.alert('Erro', 'Ocorreu um erro ao enviar o e-mail de recuperação. Por favor, tente novamente mais tarde.');
+    }
+  };
+
+  const handleResetPassword = () => {
+    if (!email.trim()) {
+      Alert.alert('Erro', 'Por favor, insira seu endereço de e-mail.');
+      return;
+    }
+
+    // Chamar a função para enviar o e-mail de recuperação
+    sendPasswordResetEmail();
+  };
 
   return (
     <View style={styles.container}>
@@ -13,10 +41,17 @@ const EsqueceuSenha = () => {
 
       <View style={styles.inputContainer}>
         <Text style={styles.label3}>Email:</Text>
-        <TextInput style={styles.input} />
+        <TextInput
+          style={styles.input}
+          onChangeText={setEmail}
+          value={email}
+          placeholder="Digite seu e-mail"
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
 
         <TouchableOpacity 
-          onPress={() => navigation.navigate('ConfirmacaoOk')}
+          onPress={handleResetPassword}
           style={styles.button}>
           <Text style={styles.buttonTextB}>Enviar Email</Text>
         </TouchableOpacity>

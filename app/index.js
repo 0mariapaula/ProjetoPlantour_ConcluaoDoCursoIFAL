@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from 'expo-router';
 
 const LoginScreen = () => {
@@ -8,16 +8,19 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
+    if (!email || !password) {
+      Alert.alert('Erro', 'Todos os campos são obrigatórios.');
+      return;
+    }
     console.log('Email:', email);
     console.log('Password:', password);
+    navigation.navigate('Explorar');
   };
 
   return (
-    
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <Image style={styles.logo} source={require('./../assets/logo.png')} />
-
         <Text style={styles.label}>Usuário</Text>
         <TextInput
           style={styles.input}
@@ -25,7 +28,6 @@ const LoginScreen = () => {
           value={email}
           onChangeText={setEmail}
         />
-
         <Text style={styles.label}>Senha</Text>
         <TextInput
           style={styles.input}
@@ -34,32 +36,26 @@ const LoginScreen = () => {
           value={password}
           onChangeText={setPassword}
         />
-
-        <TouchableOpacity 
-          style={styles.button} 
-          onPress={() => navigation.navigate('Explorar')}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleLogin}>
           <Text style={styles.buttonTextB}>Entrar</Text>
         </TouchableOpacity>
-
         <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
           <Text style={styles.input2}>Primeiro acesso</Text>
         </TouchableOpacity>
-
         <TouchableOpacity onPress={() => navigation.navigate('CadastroEmpresa')}>
           <Text style={styles.input2}>Cadastrar Empresa</Text>
         </TouchableOpacity>
-
         <TouchableOpacity onPress={() => navigation.navigate('EsqueceuSenha')}>
           <Text style={styles.input2}>Esqueceu a senha</Text>
         </TouchableOpacity>
-
-        <View style={styles.imglogo}>
-          
-        </View>
+        <View style={styles.imglogo}></View>
       </View>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
