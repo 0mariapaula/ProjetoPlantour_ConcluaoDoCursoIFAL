@@ -117,8 +117,11 @@ const Explorar = () => {
           </View>
         </View>
       </ScrollView>
+
+      {/* BottomNavBar */}
       <BottomNavBar openSearchModal={openSearchModal} />
 
+      {/* Modal */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -140,10 +143,12 @@ const Explorar = () => {
               keyExtractor={item => item.place_id}
               contentContainerStyle={styles.resultsContainer}
             />
+            {/* Botão de Pesquisar */}
             <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
               <Text style={styles.searchButtonText}>Pesquisar</Text>
             </TouchableOpacity>
           </View>
+          {/* Botão de Fechar */}
           <TouchableOpacity style={styles.closeButton} onPress={closeSearchModal}>
             <Text style={styles.closeButtonText}>Fechar</Text>
           </TouchableOpacity>
@@ -168,7 +173,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   inputContainer: {
-    height: '23%',
+    height: '35%',
     paddingTop: 0,
     width: '100%',
     backgroundColor: '#2D9AFF',
@@ -293,30 +298,31 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    width: '90%',
+    width: '100%',
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     padding: 20,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
   },
   searchInput: {
     width: '100%',
-    padding: 10,
+    padding: 12,
     borderColor: '#CCC',
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 10,
     marginBottom: 20,
     color: '#3A3A3A',
   },
   searchButton: {
     backgroundColor: '#2D9AFF',
-    padding: 10,
-    borderRadius: 5,
+    padding: 14,
+    borderRadius: 10,
     alignItems: 'center',
     width: '100%',
     marginBottom: 10, // Espaçamento ajustado para não cobrir completamente os resultados
@@ -325,17 +331,24 @@ const styles = StyleSheet.create({
   searchButtonText: {
     color: 'white',
     fontWeight: 'bold',
+    fontSize: 16,
   },
   closeButton: {
     marginTop: 10,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 10,
   },
   closeButtonText: {
     color: '#2D9AFF',
     fontWeight: 'bold',
+    fontSize: 16,
+    padding: 14,
   },
   resultsContainer: {
-    alignItems: 'center',
-    paddingBottom: 20, // Adiciona espaço extra no final para o botão Fechar
+    paddingBottom: 80, // Adiciona espaço extra no final para o botão Fechar
   },
   cardCarousel: {
     width: 150,
