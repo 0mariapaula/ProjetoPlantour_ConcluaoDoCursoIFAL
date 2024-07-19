@@ -1,26 +1,36 @@
+// App.js
 import React from 'react';
-import { NativeRouter, Route } from 'expo-router';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import LoginScreen from './app/components/LoginScreen';
 import Cadastro from './app/components/Cadastro';
 import EsqueceuSenha from './app/components/EsqueceuSenha';
-import LoginScreen from './app/components/LoginScreen';
-import inicio from './app/inicio';
+import Inicio from './app/inicio';
 import CardDetalhes from './app/CardDetalhes';
 import ConfirmacaoOk from './app/ConfirmacaoOk';
-import ConfirmaçãoDeSenha from './app/ConfirmaçãoDeSenha';
+import ConfirmacaoDeSenha from './app/ConfirmaçãoDeSenha';
 import CadastroEmpresa from './app/CadastroEmpresa';
+import Explorar from './app/Explorar';
+import Detalhes from './app/Detalhes';
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <NativeRouter>
-      <Route exact path="/" component={LoginScreen} />
-      <Route path="/cadastro" component={Cadastro} />
-      <Route path="/esqueceuSenha" component={EsqueceuSenha} />
-      <Route path="/inicio" component={inicio} />
-      <Route path="/CardDetalhes" component={CardDetalhes} />
-      <Route path="/ConfirmacaoOk" component={ConfirmacaoOk} />
-      <Route path="/ConfirmaçãoDeSenha" component={ConfirmaçãoDeSenha} />
-      <Route path="/CadastroEmpresa" component={CadastroEmpresa} />
-    </NativeRouter>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="LoginScreen">
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="Cadastro" component={Cadastro} />
+        <Stack.Screen name="EsqueceuSenha" component={EsqueceuSenha} />
+        <Stack.Screen name="Inicio" component={Inicio} />
+        <Stack.Screen name="CardDetalhes" component={CardDetalhes} />
+        <Stack.Screen name="ConfirmacaoOk" component={ConfirmacaoOk} />
+        <Stack.Screen name="ConfirmacaoDeSenha" component={ConfirmacaoDeSenha} />
+        <Stack.Screen name="CadastroEmpresa" component={CadastroEmpresa} />
+        <Stack.Screen name="Explorar" component={Explorar} />
+        <Stack.Screen name="Detalhes" component={Detalhes} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
