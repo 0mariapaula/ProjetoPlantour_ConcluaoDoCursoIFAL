@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -8,9 +7,10 @@ import EsqueceuSenha from './app/components/EsqueceuSenha';
 import Inicio from './app/inicio';
 import CardDetalhes from './app/CardDetalhes';
 import ConfirmacaoOk from './app/ConfirmacaoOk';
-import ConfirmacaoDeSenha from './app/ConfirmaçãoDeSenha';
+import ConfirmacaoDeSenha from './app/ConfirmacaoDeSenha';
 import CadastroEmpresa from './app/CadastroEmpresa';
 import Explorar from './app/Explorar';
+import Buscar from './app/Buscar';
 import Detalhes from './app/Detalhes';
 
 const Stack = createNativeStackNavigator();
@@ -28,6 +28,7 @@ const App = () => {
         <Stack.Screen name="ConfirmacaoDeSenha" component={ConfirmacaoDeSenha} />
         <Stack.Screen name="CadastroEmpresa" component={CadastroEmpresa} />
         <Stack.Screen name="Explorar" component={Explorar} />
+        <Stack.Screen name="Buscar" component={Buscar} />
         <Stack.Screen name="Detalhes" component={Detalhes} />
       </Stack.Navigator>
     </NavigationContainer>

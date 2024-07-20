@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Modal, TextInput, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Modal, TextInput } from 'react-native';
 import { useNavigation } from 'expo-router';
 import BottomNavBar from './BottomNavBar'; // Certifique-se de ajustar o caminho conforme necessário
 import Icon from 'react-native-vector-icons/FontAwesome'; // Importando ícones do FontAwesome
-
-const GOOGLE_PLACES_API_KEY = 'AIzaSyAACgV5Ok9n-HsESqMo9d8cRGAiHFlOEAY'; // Substitua pela sua chave da API do Google Places
 
 const Explorar = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [configModalVisible, setConfigModalVisible] = useState(false); // Estado para o modal de configurações
 
   const openSearchModal = () => {
     setModalVisible(true);
@@ -20,33 +18,13 @@ const Explorar = () => {
     setModalVisible(false);
   };
 
-  const handleSearch = async () => {
-    try {
-      const response = await fetch(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${searchQuery}&key=${GOOGLE_PLACES_API_KEY}`);
-      const data = await response.json();
-      setResults(data.results);
-    } catch (error) {
-      console.error(error);
-    }
+  const openConfigModal = () => {
+    setConfigModalVisible(true);
   };
 
-  const navigateToDetails = (place_id) => {
-    // Navegar para a tela de detalhes, passando o ID do lugar como parâmetro
-    navigation.navigate('CardDetalhes', { place_id });
+  const closeConfigModal = () => {
+    setConfigModalVisible(false);
   };
-
-  const renderResult = ({ item }) => (
-    <TouchableOpacity style={styles.card} onPress={() => navigateToDetails(item.place_id)}>
-      {item.photos && item.photos.length > 0 && (
-        <Image
-          source={{ uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${item.photos[0].photo_reference}&key=${GOOGLE_PLACES_API_KEY}` }}
-          style={styles.cardImage}
-        />
-      )}
-      <Text style={styles.cardTitle}>{item.name}</Text>
-      <Text style={styles.cardDescription}>{item.formatted_address}</Text>
-    </TouchableOpacity>
-  );
 
   return (
     <View style={styles.mainContainer}>
@@ -54,7 +32,7 @@ const Explorar = () => {
         <View style={styles.container}>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Plantour</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Config')}>
+            <TouchableOpacity onPress={openConfigModal}>
               <Image source={require('../assets/configuracao.png')} style={styles.configuracao} />
             </TouchableOpacity>
           </View>
@@ -117,41 +95,48 @@ const Explorar = () => {
           </View>
         </View>
       </ScrollView>
-
-      {/* BottomNavBar */}
       <BottomNavBar openSearchModal={openSearchModal} />
 
-      {/* Modal */}
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeSearchModal}
+        visible={configModalVisible}
+        onRequestClose={closeConfigModal}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Pesquisar..."
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholderTextColor="#888"
-            />
-            <FlatList
-              data={results}
-              renderItem={renderResult}
-              keyExtractor={item => item.place_id}
-              contentContainerStyle={styles.resultsContainer}
-            />
-            {/* Botão de Pesquisar */}
-            <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-              <Text style={styles.searchButtonText}>Pesquisar</Text>
+            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
+              <Icon name="moon-o" size={20} color="#000" style={styles.configIcon} />
+              <Text style={styles.configOptionText}>Modo escuro</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
+              <Icon name="user" size={20} color="#000" style={styles.configIcon} />
+              <Text style={styles.configOptionText}>Conta</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
+              <Icon name="heart" size={20} color="#000" style={styles.configIcon} />
+              <Text style={styles.configOptionText}>Favoritos</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
+              <Icon name="lock" size={20} color="#000" style={styles.configIcon} />
+              <Text style={styles.configOptionText}>Privacidade e Segurança</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
+              <Icon name="bell" size={20} color="#000" style={styles.configIcon} />
+              <Text style={styles.configOptionText}>Notificações</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.configOption} onPress={closeConfigModal}>
+              <Icon name="question-circle" size={20} color="#000" style={styles.configIcon} />
+              <Text style={styles.configOptionText}>Ajuda e Feedback</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.configOption, { borderColor: 'red' }]} onPress={closeConfigModal}>
+              <Icon name="sign-out" size={20} color="red" style={styles.configIcon} />
+              <Text style={[styles.configOptionText, { color: 'red' }]}>Sair</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.closeButton} onPress={closeConfigModal}>
+              <Text style={styles.closeButtonText}>Fechar</Text>
             </TouchableOpacity>
           </View>
-          {/* Botão de Fechar */}
-          <TouchableOpacity style={styles.closeButton} onPress={closeSearchModal}>
-            <Text style={styles.closeButtonText}>Fechar</Text>
-          </TouchableOpacity>
         </View>
       </Modal>
     </View>
@@ -173,7 +158,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   inputContainer: {
-    height: '35%',
+    height: '23%',
     paddingTop: 0,
     width: '100%',
     backgroundColor: '#2D9AFF',
@@ -239,11 +224,12 @@ const styles = StyleSheet.create({
   },
   textoTitulo2: {
     marginBottom: 5,
-    color: '#828282',
+    color: '#242424',
     textAlign: 'justify',
-    fontSize: 12,
-    bottom: 230,
-    right: 35,
+    fontWeight: 'bold',
+    fontSize: 20,
+    bottom: 20,
+    right: 30,
   },
   textoTitulo3: {
     marginBottom: 5,
@@ -251,126 +237,122 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     fontWeight: 'bold',
     fontSize: 20,
-    bottom: 140,
-    right: 60,
+    bottom: 20,
+    left: 20,
+  },
+  label: {
+    marginBottom: 5,
+    color: '#FFFFFF',
+    textAlign: 'justify',
+    fontWeight: 'bold',
+    fontSize: 25,
+    top: 80,
   },
   cardContainer: {
-    alignItems: 'center',
-    bottom: 210,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    bottom: 280,
   },
   card: {
-    width: 320,
-    height: 250,
+    width: '50%',
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
+    padding: 20,
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 10,
-    marginVertical: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
+    marginBottom: 20,
   },
   cardImage: {
-    width: '100%',
-    height: 140,
+    width: 170,
+    height: 100,
     borderRadius: 10,
     marginBottom: 10,
   },
   cardTitle: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#3A3A3A',
     marginBottom: 5,
-    textAlign: 'center',
   },
   cardDescription: {
-    fontSize: 14,
-    color: '#828282',
     textAlign: 'center',
+  },
+  cardImageCarrossel: {
+    width: 160,
+    height: 100,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  cardCarousel: {
+    width: 170,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    marginRight: 10,
+    marginLeft: 10,
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    width: '100%',
-    backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    width: '80%',
     padding: 20,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
   },
   searchInput: {
     width: '100%',
-    padding: 12,
-    borderColor: '#CCC',
+    padding: 10,
     borderWidth: 1,
+    borderColor: '#007BFF',
     borderRadius: 10,
     marginBottom: 20,
-    color: '#3A3A3A',
+    backgroundColor: '#FFFFFF',
+    color: '#333',
   },
   searchButton: {
-    backgroundColor: '#2D9AFF',
-    padding: 14,
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 10,
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: 10, // Espaçamento ajustado para não cobrir completamente os resultados
-    zIndex: 1, // Coloca o botão na frente dos resultados
+    marginBottom: 10,
   },
   searchButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: '#FFFFFF',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   closeButton: {
-    marginTop: 10,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: 10,
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    top:13,
   },
   closeButtonText: {
-    color: '#2D9AFF',
-    fontWeight: 'bold',
+    color: '#FFFFFF',
     fontSize: 16,
-    padding: 14,
+    fontWeight: 'bold',
   },
-  resultsContainer: {
-    paddingBottom: 80, // Adiciona espaço extra no final para o botão Fechar
-  },
-  cardCarousel: {
-    width: 150,
-    height: 150,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 10,
-    marginVertical: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
-    marginRight: 10,
-  },
-  cardImageCarrossel: {
+  configOption: {
     width: '100%',
-    height: 70,
-    borderRadius: 10,
-    marginBottom: 10,
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#DDD',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  configOptionText: {
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  configIcon: {
+    marginRight: 10,
   },
 });
 
