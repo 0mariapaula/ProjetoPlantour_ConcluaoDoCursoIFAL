@@ -46,7 +46,7 @@ const Buscar = () => {
       <View style={styles.cardContent}>
         <Text style={styles.title}>{item.name}</Text>
         <Text style={styles.subtitle}>{item.formatted_address}</Text>
-        <Text style={styles.rating}>Rating: {item.rating}</Text>
+        <Text style={styles.rating}>Avaliação: {item.rating}</Text>
         <Text style={styles.distance}>{item.distance ? `${item.distance} km` : ''}</Text>
       </View>
     </TouchableOpacity>
