@@ -1,0 +1,11 @@
+[
+    {
+      "titulo": "Exemplo de Restaurante",
+      "valor": "150",
+      "descricao": "Descrição do restaurante",
+      "imagem": "url_da_imagem",
+      "endereco": "Endereço do restaurante",
+      "tipo": "restaurante"
+    }
+  ]
+  
