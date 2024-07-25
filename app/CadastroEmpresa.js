@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { useNavigation } from 'expo-router';
+import axios from 'axios';
 
 const CadastroEmpresa = () => {
   const navigation = useNavigation();
@@ -12,10 +13,10 @@ const CadastroEmpresa = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleRegister = () => {
-    const trimmedName = name.trim();
+  const handleCadastro = async () => {
     const trimmedEmail = email.trim();
     const trimmedAddress = address.trim();
+    const trimmedName = name.trim();
 
     if (!cnpj || !trimmedEmail || !phone || !trimmedAddress || !trimmedName || !password || !confirmPassword) {
       Alert.alert('Erro', 'Todos os campos são obrigatórios!');
@@ -34,17 +35,21 @@ const CadastroEmpresa = () => {
       return;
     }
 
-    console.log('CNPJ:', cnpj);
-    console.log('Email:', trimmedEmail);
-    console.log('Telefone:', phone);
-    console.log('Endereço:', trimmedAddress);
-    console.log('Nome:', trimmedName);
-    console.log('Senha:', password);
-  };
+    try {
+      const response = await axios.post('http://localhost:3001/api/companies/register', {
+        cnpj,
+        email: trimmedEmail,
+        phone,
+        address: trimmedAddress,
+        name: trimmedName,
+        password,
+      });
 
-  // Função para aceitar apenas números
-  const handleNumericInput = (input) => {
-    return input.replace(/[^0-9]/g, '');
+      Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+      navigation.navigate('index');
+    } catch (error) {
+      Alert.alert('Erro', 'Erro ao cadastrar empresa. Tente novamente.');
+    }
   };
 
   return (
@@ -56,15 +61,14 @@ const CadastroEmpresa = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.inputContainer}>
           <Image style={styles.logo} source={require('./../assets/logo.png')} />
-          <Text style={styles.title}>Cadastro de empresa</Text>
+          <Text style={styles.title}>Cadastro de Empresa</Text>
 
           <Text style={styles.label}>CNPJ:</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            maxLength={14}
-            onChangeText={(text) => setCnpj(handleNumericInput(text))}
-            value={cnpj}
+          <TextInput 
+            style={styles.input} 
+            onChangeText={setCnpj} 
+            value={cnpj} 
+            placeholder="Digite o CNPJ"
           />
 
           <Text style={styles.label}>Email:</Text>
@@ -72,6 +76,7 @@ const CadastroEmpresa = () => {
             style={styles.input} 
             onChangeText={setEmail} 
             value={email} 
+            placeholder="Digite seu email"
           />
 
           <Text style={styles.label}>Telefone:</Text>
@@ -81,6 +86,7 @@ const CadastroEmpresa = () => {
             maxLength={11}
             onChangeText={(text) => setPhone(handleNumericInput(text))}
             value={phone}
+            placeholder="Digite seu telefone"
           />
 
           <Text style={styles.label}>Endereço:</Text>
@@ -88,19 +94,21 @@ const CadastroEmpresa = () => {
             style={styles.input} 
             onChangeText={setAddress} 
             value={address} 
+            placeholder="Digite o endereço"
           />
 
-          <Text style={styles.label}>Nome:</Text>
+          <Text style={styles.label}>Nome da Empresa:</Text>
           <TextInput 
             style={styles.input} 
             onChangeText={setName} 
             value={name} 
+            placeholder="Digite o nome da empresa"
           />
 
           <Text style={styles.label}>Criar senha :</Text>
           <TextInput
             style={styles.input}
-            placeholder="Senha"
+            placeholder="Digite sua senha"
             secureTextEntry={true}
             onChangeText={setPassword}
             value={password}
@@ -109,7 +117,7 @@ const CadastroEmpresa = () => {
           <Text style={styles.label}>Confirmar senha:</Text>
           <TextInput
             style={styles.input}
-            placeholder="Confirmar senha"
+            placeholder="Confirme sua senha"
             secureTextEntry={true}
             onChangeText={setConfirmPassword}
             value={confirmPassword}
@@ -117,19 +125,20 @@ const CadastroEmpresa = () => {
 
           <TouchableOpacity 
             style={styles.button} 
-            onPress={handleRegister}
+            onPress={handleCadastro}
           >
             <Text style={styles.buttonTextB}>Cadastrar</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate('index')}>
-            <Text style={styles.input2}>Possuo cadastro</Text>
+            <Text style={styles.input2}>Já possui cadastro? Faça login.</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { useNavigation } from 'expo-router';
+import axios from 'axios';
 
 const Cadastro = () => {
   const navigation = useNavigation();
@@ -11,7 +12,7 @@ const Cadastro = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleCadastro = () => {
+  const handleCadastro = async () => {
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
 
@@ -32,17 +33,20 @@ const Cadastro = () => {
       return;
     }
 
-    console.log('Nome:', trimmedName);
-    console.log('Email:', trimmedEmail);
-    console.log('Telefone:', phone);
-    console.log('CPF:', cpf);
-    console.log('Senha:', password);
+    try {
+      const response = await axios.post('http://localhost:3001/api/users/register', {
+        fullName: trimmedName,
+        email: trimmedEmail,
+        phone,
+        cpf,
+        password,
+      });
 
-    // Aqui você pode adicionar a lógica para enviar os dados para o servidor, por exemplo
-  };
-
-  const handleNumericInput = (input) => {
-    return input.replace(/[^0-9]/g, '');
+      Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+      navigation.navigate('index');
+    } catch (error) {
+      Alert.alert('Erro', 'Erro ao cadastrar usuário. Tente novamente.');
+    }
   };
 
   return (
