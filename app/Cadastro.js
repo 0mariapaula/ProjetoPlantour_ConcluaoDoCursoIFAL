@@ -1,202 +1,64 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
-import { useNavigation } from 'expo-router';
-import axios from 'axios';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 
-const Cadastro = () => {
-  const navigation = useNavigation();
-  const [name, setName] = useState('');
+const CadastroEmpresa = ({ navigation }) => {
+  const [cnpj, setCnpj] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [endereco, setEndereco] = useState('');
+  const [nome, setNome] = useState('');
+  const [senha, setSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState('');
 
-  const handleCadastro = async () => {
-    const trimmedName = name.trim();
-    const trimmedEmail = email.trim();
-
-    if (!trimmedName || !trimmedEmail || !phone || !cpf || !password || !confirmPassword) {
-      Alert.alert('Erro', 'Todos os campos são obrigatórios!');
-      return;
-    }
-    if (!/^\d{10,11}$/.test(phone)) {
-      Alert.alert('Erro', 'Telefone inválido!');
-      return;
-    }
-    if (!/^\d{11}$/.test(cpf)) {
-      Alert.alert('Erro', 'CPF inválido!');
-      return;
-    }
-    if (password !== confirmPassword) {
-      Alert.alert('Erro', 'As senhas não coincidem!');
+  const handleCadastro = () => {
+    if (senha !== confirmarSenha) {
+      Alert.alert('Erro', 'As senhas não coincidem.');
       return;
     }
 
-    try {
-      const response = await axios.post('http://localhost:3001/api/users/register', {
-        fullName: trimmedName,
-        email: trimmedEmail,
-        phone,
-        cpf,
-        password,
-      });
-
-      Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
-      navigation.navigate('index');
-    } catch (error) {
-      Alert.alert('Erro', 'Erro ao cadastrar usuário. Tente novamente.');
-    }
+    fetch('http://localhost:3000/api/companies/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cnpj, email, telefone, endereco, nome, senha }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      Alert.alert('Sucesso', 'Empresa cadastrada com sucesso!');
+      navigation.navigate('Login');
+    })
+    .catch(error => {
+      Alert.alert('Erro', 'Não foi possível cadastrar a empresa.');
+      console.error(error);
+    });
   };
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
-      behavior={Platform.OS === "ios" ? "padding" : null}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.inputContainer}>
-          <Image style={styles.logo} source={require('./../assets/logo.png')} />
-          <Text style={styles.title}>Cadastro de usuário</Text>
-
-          <Text style={styles.label}>Nome Completo:</Text>
-          <TextInput 
-            style={styles.input} 
-            onChangeText={setName} 
-            value={name} 
-            placeholder="Digite seu nome completo"
-          />
-
-          <Text style={styles.label}>Email:</Text>
-          <TextInput 
-            style={styles.input} 
-            onChangeText={setEmail} 
-            value={email} 
-            placeholder="Digite seu email"
-          />
-
-          <Text style={styles.label}>Telefone:</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            maxLength={11}
-            onChangeText={(text) => setPhone(handleNumericInput(text))}
-            value={phone}
-            placeholder="Digite seu telefone"
-          />
-
-          <Text style={styles.label}>CPF:</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="numeric"
-            maxLength={11}
-            onChangeText={(text) => setCpf(handleNumericInput(text))}
-            value={cpf}
-            placeholder="Digite seu CPF"
-          />
-
-          <Text style={styles.label}>Criar senha :</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Digite sua senha"
-            secureTextEntry={true}
-            onChangeText={setPassword}
-            value={password}
-          />
-
-          <Text style={styles.label}>Confirmar senha:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Confirme sua senha"
-            secureTextEntry={true}
-            onChangeText={setConfirmPassword}
-            value={confirmPassword}
-          />
-
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={handleCadastro}
-          >
-            <Text style={styles.buttonTextB}>Cadastrar</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => navigation.navigate('index')}>
-            <Text style={styles.input2}>Já possui cadastro? Faça login.</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+    <View style={styles.container}>
+      {/* Campos de input */}
+      {/* ... */}
+      <TouchableOpacity onPress={handleCadastro} style={styles.button}>
+        <Text style={styles.buttonText}>Cadastrar</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#2D9AFF',
-  },
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  inputContainer: {
-    width: '100%',
-    height: '100%',
     padding: 20,
     backgroundColor: '#fff',
-    borderRadius: 25,
-    alignItems: 'center',
-  },
-  logo: {
-    width: 120,
-    height: 120,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 24,
-    color: '#000',
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  label: {
-    marginBottom: 5,
-    color: '#000',
-    textAlign: 'left',
-    fontWeight: 'bold',
-    alignSelf: 'flex-start',
-  },
-  input: {
-    width: '100%',
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#cccccc',
-    borderRadius: 30,
-    paddingHorizontal: 10,
-    marginBottom: 15,
-    backgroundColor: '#D9D9D9',
   },
   button: {
-    width: '50%',
-    height: 50,
     backgroundColor: '#2D9AFF',
-    borderRadius: 35,
+    padding: 10,
+    borderRadius: 5,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
   },
-  buttonTextB: {
+  buttonText: {
     color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  input2: {
-    marginTop: 20,
-    color: '#2D9AFF',
-    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 
-export default Cadastro;
+export default CadastroEmpresa;
