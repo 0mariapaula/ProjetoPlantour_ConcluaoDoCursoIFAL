@@ -1,64 +1,72 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, Button, Alert } from 'react-native';
 
-const CadastroEmpresa = ({ navigation }) => {
-  const [cnpj, setCnpj] = useState('');
+const Cadastro = () => {
+  const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
-  const [endereco, setEndereco] = useState('');
-  const [nome, setNome] = useState('');
+  const [cpf, setCpf] = useState('');
   const [senha, setSenha] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
 
-  const handleCadastro = () => {
-    if (senha !== confirmarSenha) {
-      Alert.alert('Erro', 'As senhas não coincidem.');
-      return;
+  const handleCadastro = async () => {
+    try {
+      const response = await fetch('http://10.140.40.9:3000/api/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nome,
+          email,
+          telefone,
+          cpf,
+          senha,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText);
+      }
+
+      const result = await response.text();
+      Alert.alert('Cadastro realizado com sucesso!', result);
+    } catch (error) {
+      Alert.alert('Erro ao cadastrar usuário', error.message);
     }
-
-    fetch('http://localhost:3000/api/companies/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cnpj, email, telefone, endereco, nome, senha }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      Alert.alert('Sucesso', 'Empresa cadastrada com sucesso!');
-      navigation.navigate('Login');
-    })
-    .catch(error => {
-      Alert.alert('Erro', 'Não foi possível cadastrar a empresa.');
-      console.error(error);
-    });
   };
 
   return (
-    <View style={styles.container}>
-      {/* Campos de input */}
-      {/* ... */}
-      <TouchableOpacity onPress={handleCadastro} style={styles.button}>
-        <Text style={styles.buttonText}>Cadastrar</Text>
-      </TouchableOpacity>
+    <View>
+      <TextInput
+        placeholder="Nome"
+        value={nome}
+        onChangeText={setNome}
+      />
+      <TextInput
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TextInput
+        placeholder="Telefone"
+        value={telefone}
+        onChangeText={setTelefone}
+      />
+      <TextInput
+        placeholder="CPF"
+        value={cpf}
+        onChangeText={setCpf}
+      />
+      <TextInput
+        placeholder="Senha"
+        secureTextEntry
+        value={senha}
+        onChangeText={setSenha}
+      />
+      <Button title="Cadastrar" onPress={handleCadastro} />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  button: {
-    backgroundColor: '#2D9AFF',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-});
-
-export default CadastroEmpresa;
+export default Cadastro;
