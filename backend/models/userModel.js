@@ -1,12 +1,31 @@
-// backend/models/userModel.js
-const connection = require('../config/database');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-// Função para criar um novo usuário
-const createUser = (user, callback) => {
-  const query = `INSERT INTO users (nome, email, telefone, cpf, senha) VALUES (?, ?, ?, ?, ?)`;
-  connection.query(query, [user.nome, user.email, user.telefone, user.cpf, user.senha], callback);
-};
+const User = sequelize.define('User', {
+  nome_completo: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  telefone: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  cpf: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  senha: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+}, {
+  tableName: 'usuarios_comuns',
+});
 
-module.exports = {
-  createUser
-};
+module.exports = User;

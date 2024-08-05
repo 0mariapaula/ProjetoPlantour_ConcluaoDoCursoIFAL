@@ -1,10 +1,35 @@
-const connection = require('../config/database');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const createCompany = (company, callback) => {
-  const query = `INSERT INTO usuarios_empresas (cnpj, email, telefone, endereco, nome, senha) VALUES (?, ?, ?, ?, ?, ?)`; // Use 'nome_empresa'
-  connection.query(query, [company.cnpj, company.email, company.telefone, company.endereco, company.nome_empresa, company.senha], callback);
-};
+const Company = sequelize.define('Company', {
+  cnpj: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  telefone: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  endereco: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  nome: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  senha: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+}, {
+  tableName: 'usuarios_empresas',
+});
 
-module.exports = {
-  createCompany
-};
+module.exports = Company;
