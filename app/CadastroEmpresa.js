@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
-import { useNavigation } from 'expo-router';
+import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
 
 const CadastroEmpresa = () => {
-  const navigation = useNavigation();
+  //const navigation = useNavigation();
+  const router = useRouter(); //adc
   const [cnpj, setCnpj] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -122,7 +123,7 @@ const CadastroEmpresa = () => {
             <Text style={styles.buttonTextB}>Cadastrar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate('index')}>
+          <TouchableOpacity onPress={() => router.push('/index')}>
             <Text style={styles.input2}>Possuo cadastro</Text>
           </TouchableOpacity>
         </View>

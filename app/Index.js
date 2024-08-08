@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
-import { useNavigation } from 'expo-router';
+import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
+import { Route } from 'expo-router/build/Route';
 
 const LoginScreen = () => {
-  const navigation = useNavigation();
+  //const navigation = useNavigation();
+  const router = useRouter(); //adc
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -14,7 +16,7 @@ const LoginScreen = () => {
     }
     console.log('Email:', email);
     console.log('Password:', password);
-    navigation.navigate('Explorar');
+    router.push('Explorar');
   };
 
   return (
@@ -36,18 +38,29 @@ const LoginScreen = () => {
           value={password}
           onChangeText={setPassword}
         />
+
+        <View style>
+
+        </View>
+
         <TouchableOpacity
           style={styles.button}
           onPress={handleLogin}>
           <Text style={styles.buttonTextB}>Entrar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
+        </TouchableOpacity> 
+
+        {/* <TouchableOpacity onPress={() => router.push ('/Explorar')}>
+          <Text style={styles.buttonTextB}>Entrar</Text>
+        </TouchableOpacity> */}
+
+        <TouchableOpacity onPress={() => router.push('/Cadastro')}>
           <Text style={styles.input2}>Primeiro acesso</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('CadastroEmpresa')}>
+
+        <TouchableOpacity onPress={() => router.push('/CadastroEmpresa')}>
           <Text style={styles.input2}>Cadastrar Empresa</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('EsqueceuSenha')}>
+        <TouchableOpacity onPress={() => router.push('/EsqueceuSenha')}>
           <Text style={styles.input2}>Esqueceu a senha</Text>
         </TouchableOpacity>
         <View style={styles.imglogo}></View>
