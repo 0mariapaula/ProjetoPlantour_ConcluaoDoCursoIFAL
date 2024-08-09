@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Modal, TextInput } from 'react-native';
-import { useNavigation } from 'expo-router';
+import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
 import BottomNavBar from './BottomNavBar'; // Certifique-se de ajustar o caminho conforme necessário
 import Icon from 'react-native-vector-icons/FontAwesome'; // Importando ícones do FontAwesome
 
 const Explorar = () => {
-  const navigation = useNavigation();
+  //  const navigation = useNavigation();
+  const router = useRouter(); //adc essa parte aqui
   const [modalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [configModalVisible, setConfigModalVisible] = useState(false); // Estado para o modal de configurações
@@ -53,7 +54,7 @@ const Explorar = () => {
           <Text style={styles.textoTitulo2}>Locais mais visitados no mundo</Text>
 
           <View style={styles.cardContainer}>
-            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('CardDetalhes')}>
+            <TouchableOpacity style={styles.card} onPress={() => router.push('/CardDetalhes')}>
               <Image source={require('../assets/paris.png')} style={styles.cardImage} />
               <Text style={styles.cardTitle}>Paris - França</Text>
               <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>

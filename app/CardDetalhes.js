@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView,TouchableOpacity } from 'react-native';
-import { useNavigation } from 'expo-router';
+import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
 
 
 const CardDetalhes = () => {
-  const navigation = useNavigation();
+  //  const navigation = useNavigation();
+  const router = useRouter(); //adc essa parte aqui
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.inputContainer}>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Explorar')}>
+        <TouchableOpacity onPress={() => router.push('/Explorar')}>
         <Image source={require('../assets/seta.png')} style={styles.seta} />
         </TouchableOpacity>
 

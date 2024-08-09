@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
 
 const Cadastro = () => {
   //const navigation = useNavigation();
-  const router = useRouter(); //adc
+  const router = useRouter(); //adc essa parte aqui
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -118,7 +118,7 @@ const Cadastro = () => {
             <Text style={styles.buttonTextB}>Cadastrar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => router.push('/index')}>
+          <TouchableOpacity onPress={() => router.push('/')}>
             <Text style={styles.input2}>Já possui cadastro? Faça login.</Text>
           </TouchableOpacity>
 

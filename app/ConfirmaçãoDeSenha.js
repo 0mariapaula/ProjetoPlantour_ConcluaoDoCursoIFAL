@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
-import { useNavigation } from 'expo-router';
+import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
 
 const ConfirmaçãoDeSenha = () => {
-  const navigation = useNavigation();
+  //const navigation = useNavigation();
+  const router = useRouter(); //adc essa parte aqui
   const [novaSenha, setNovaSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
 

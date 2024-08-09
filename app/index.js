@@ -5,7 +5,7 @@ import { Route } from 'expo-router/build/Route';
 
 const LoginScreen = () => {
   //const navigation = useNavigation();
-  const router = useRouter(); //adc
+  const router = useRouter(); //adc essa parte aqui
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -47,11 +47,11 @@ const LoginScreen = () => {
           style={styles.button}
           onPress={handleLogin}>
           <Text style={styles.buttonTextB}>Entrar</Text>
-        </TouchableOpacity> 
+        </TouchableOpacity>  
 
-        {/* <TouchableOpacity onPress={() => router.push ('/Explorar')}>
+         {/* <TouchableOpacity onPress={() => router.push ('/Explorar')}>
           <Text style={styles.buttonTextB}>Entrar</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>   ESSE CAMPO É O CERTO !!!! MAS NAO ESTA PEGANDO O ESTILO DO BOTT*/}
 
         <TouchableOpacity onPress={() => router.push('/Cadastro')}>
           <Text style={styles.input2}>Primeiro acesso</Text>

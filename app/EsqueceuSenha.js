@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput, Alert } from 'react-native';
-import { useNavigation } from 'expo-router';
+import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
 
 const EsqueceuSenha = () => {
-  const navigation = useNavigation();
+//  const navigation = useNavigation();
   const [email, setEmail] = useState('');
+  const router = useRouter(); //adc essa parte aqui
 
   const sendPasswordResetEmail = async () => {
     // Simulação de envio assíncrono (substitua com a lógica real de envio de e-mail)
@@ -16,7 +17,7 @@ const EsqueceuSenha = () => {
       Alert.alert('Sucesso', `Um e-mail de recuperação foi enviado para ${email}`);
 
       // Navegar para a tela de confirmação após o envio do e-mail
-      navigation.navigate('ConfirmacaoOk');
+      router.push('/ConfirmacaoOk');
     } catch (error) {
       console.error('Erro ao enviar e-mail de recuperação:', error);
       Alert.alert('Erro', 'Ocorreu um erro ao enviar o e-mail de recuperação. Por favor, tente novamente mais tarde.');
@@ -58,7 +59,7 @@ const EsqueceuSenha = () => {
 
         <Text style={styles.buttonTextOU}>OU</Text>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
+        <TouchableOpacity onPress={() => router.push('/Cadastro')}>
           <Text style={styles.input2}>Criar Nova Conta</Text>
         </TouchableOpacity>
       </View>

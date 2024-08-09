@@ -1,16 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
 
 const Detalhes = () => {
-  const navigation = useNavigation();
-  const route = useRoute();
+//  const navigation = useNavigation();
+  //const route = useRoute();
+  
   const { place } = route.params;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.inputContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Buscar')}>
+        <TouchableOpacity onPress={() => router.push('/Buscar')}>
           <Image source={require('../assets/seta.png')} style={styles.seta} />
         </TouchableOpacity>
         <TouchableOpacity>

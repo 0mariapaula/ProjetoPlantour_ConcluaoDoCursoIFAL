@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Platform, ScrollView } from 'react-native';
-import { useNavigation } from 'expo-router';
+import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const CriarRoteiro = () => {
-  const navigation = useNavigation();
+//  const navigation = useNavigation();
+const router = useRouter(); //adc essa parte aqui
 
   const [nome, setNome] = useState('');
   const [locais, setLocais] = useState(['']); // Estado para armazenar a lista de locais
@@ -51,7 +52,7 @@ const CriarRoteiro = () => {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <View style={styles.topBar}>
-          <TouchableOpacity onPress={() => navigation.navigate('Viagens')}>
+          <TouchableOpacity onPress={() => router.push('/Viagens')}>
             <Image source={require('../assets/seta.png')} style={styles.seta} />
           </TouchableOpacity>
           <Text style={styles.topBarText}>Criar Roteiro</Text>

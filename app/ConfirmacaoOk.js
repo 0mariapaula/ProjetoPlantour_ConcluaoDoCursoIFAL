@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native'; 
-import { useNavigation } from 'expo-router';
+import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
 
 const ConfirmacaoOk = () => {
-  const navigation = useNavigation();
+//  const navigation = useNavigation();
+  const router = useRouter(); //adc essa parte aqui
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -20,7 +21,7 @@ const ConfirmacaoOk = () => {
         <Text style={styles.label}>Um email de confirmação foi enviado. Verifique sua caixa de entrada e siga as instruções.</Text>
       <TouchableOpacity 
         style={styles.button} 
-        onPress={() => navigation.navigate('ConfirmaçãoDeSenha')}>
+        onPress={() => router.push('/ConfirmaçãoDeSenha')}>
         <Text  style={styles.buttonTextB}>OK</Text> 
       </TouchableOpacity>
 
