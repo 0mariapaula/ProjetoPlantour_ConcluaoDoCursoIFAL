@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
-import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
-import { Route } from 'expo-router/build/Route';
+import { useRouter } from 'expo-router';
+import { auth } from '../firebaseConfig';
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginScreen = () => {
-  //const navigation = useNavigation();
-  const router = useRouter(); //adc essa parte aqui
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Erro', 'Todos os campos são obrigatórios.');
       return;
     }
-    console.log('Email:', email);
-    console.log('Password:', password);
-    router.push('Explorar');
+
+    try {
+      // Tenta autenticar o usuário com email e senha
+      await signInWithEmailAndPassword(auth, email, password);
+      router.push('Explorar');
+    } catch (error) {
+      // Exibe uma mensagem de erro caso a autenticação falhe
+      Alert.alert('Erro', error.message);
+    }
   };
 
   return (
@@ -39,19 +45,11 @@ const LoginScreen = () => {
           onChangeText={setPassword}
         />
 
-        <View style>
-
-        </View>
-
         <TouchableOpacity
           style={styles.button}
           onPress={handleLogin}>
           <Text style={styles.buttonTextB}>Entrar</Text>
-        </TouchableOpacity>  
-
-         {/* <TouchableOpacity onPress={() => router.push ('/Explorar')}>
-          <Text style={styles.buttonTextB}>Entrar</Text>
-        </TouchableOpacity>   ESSE CAMPO É O CERTO !!!! MAS NAO ESTA PEGANDO O ESTILO DO BOTT*/}
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={() => router.push('/Cadastro')}>
           <Text style={styles.input2}>Primeiro acesso</Text>
@@ -69,7 +67,6 @@ const LoginScreen = () => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -84,7 +81,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 25,
     alignItems: 'center',
-    
   },
   logo: {
     width: 120,
