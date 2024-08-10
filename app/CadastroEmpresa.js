@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
-import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
+import { useRouter } from 'expo-router';
+import { auth } from '../firebaseConfig';
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const CadastroEmpresa = () => {
-  //const navigation = useNavigation();
-  const router = useRouter(); //adc essa parte aqui
+  const router = useRouter(); 
   const [cnpj, setCnpj] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -12,8 +13,9 @@ const CadastroEmpresa = () => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
     const trimmedAddress = address.trim();
@@ -35,15 +37,18 @@ const CadastroEmpresa = () => {
       return;
     }
 
-    console.log('CNPJ:', cnpj);
-    console.log('Email:', trimmedEmail);
-    console.log('Telefone:', phone);
-    console.log('Endereço:', trimmedAddress);
-    console.log('Nome:', trimmedName);
-    console.log('Senha:', password);
+    try {
+      setLoading(true);
+      await createUserWithEmailAndPassword(auth, email, password);
+      Alert.alert('Sucesso', 'Conta da empresa criada com sucesso!');
+      router.push('/');
+    } catch (error) {
+      Alert.alert('Erro', error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Função para aceitar apenas números
   const handleNumericInput = (input) => {
     return input.replace(/[^0-9]/g, '');
   };
@@ -66,6 +71,7 @@ const CadastroEmpresa = () => {
             maxLength={14}
             onChangeText={(text) => setCnpj(handleNumericInput(text))}
             value={cnpj}
+            placeholder="Digite o CNPJ"
           />
 
           <Text style={styles.label}>Email:</Text>
@@ -73,6 +79,7 @@ const CadastroEmpresa = () => {
             style={styles.input} 
             onChangeText={setEmail} 
             value={email} 
+            placeholder="Digite o email"
           />
 
           <Text style={styles.label}>Telefone:</Text>
@@ -82,6 +89,7 @@ const CadastroEmpresa = () => {
             maxLength={11}
             onChangeText={(text) => setPhone(handleNumericInput(text))}
             value={phone}
+            placeholder="Digite o telefone"
           />
 
           <Text style={styles.label}>Endereço:</Text>
@@ -89,6 +97,7 @@ const CadastroEmpresa = () => {
             style={styles.input} 
             onChangeText={setAddress} 
             value={address} 
+            placeholder="Digite o endereço"
           />
 
           <Text style={styles.label}>Nome:</Text>
@@ -96,6 +105,7 @@ const CadastroEmpresa = () => {
             style={styles.input} 
             onChangeText={setName} 
             value={name} 
+            placeholder="Digite o nome"
           />
 
           <Text style={styles.label}>Criar senha :</Text>
@@ -119,12 +129,13 @@ const CadastroEmpresa = () => {
           <TouchableOpacity 
             style={styles.button} 
             onPress={handleRegister}
+            disabled={loading}
           >
-            <Text style={styles.buttonTextB}>Cadastrar</Text>
+            <Text style={styles.buttonTextB}>{loading ? 'Cadastrando...' : 'Cadastrar'}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => router.push('/')}>
-            <Text style={styles.input2}>Possuo cadastro</Text>
+            <Text style={styles.input2}>Já possui cadastro? Faça login.</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

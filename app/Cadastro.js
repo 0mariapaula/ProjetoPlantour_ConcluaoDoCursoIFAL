@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
-import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
+import { useRouter } from 'expo-router';
+import { auth } from '../firebaseConfig';
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const Cadastro = () => {
-  //const navigation = useNavigation();
-  const router = useRouter(); //adc essa parte aqui
+  const router = useRouter(); 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [cpf, setCpf] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleCadastro = () => {
+  const handleCadastro = async () => {
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
 
@@ -33,13 +35,16 @@ const Cadastro = () => {
       return;
     }
 
-    console.log('Nome:', trimmedName);
-    console.log('Email:', trimmedEmail);
-    console.log('Telefone:', phone);
-    console.log('CPF:', cpf);
-    console.log('Senha:', password);
-
-    // Aqui você pode adicionar a lógica para enviar os dados para o servidor, por exemplo
+    try {
+      setLoading(true);
+      await createUserWithEmailAndPassword(auth, email, password);
+      Alert.alert('Sucesso', 'Conta criada com sucesso!');
+      router.push('/');
+    } catch (error) {
+      Alert.alert('Erro', error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleNumericInput = (input) => {
@@ -114,14 +119,14 @@ const Cadastro = () => {
           <TouchableOpacity 
             style={styles.button} 
             onPress={handleCadastro}
+            disabled={loading}
           >
-            <Text style={styles.buttonTextB}>Cadastrar</Text>
+            <Text style={styles.buttonTextB}>{loading ? 'Cadastrando...' : 'Cadastrar'}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => router.push('/')}>
             <Text style={styles.input2}>Já possui cadastro? Faça login.</Text>
           </TouchableOpacity>
-
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
