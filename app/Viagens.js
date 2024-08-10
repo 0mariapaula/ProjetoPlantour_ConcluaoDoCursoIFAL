@@ -18,7 +18,7 @@ const Viagens = ({ openSearchModal }) => {
         <Botao 
           texto="Criar roteiro" 
           icone={{ uri: 'https://img.icons8.com/ios/452/clipboard.png' }} 
-          onPress={() => navigation.navigate('CriarRoteiro')} 
+          onPress={() => router.push('/CriarRoteiro')} 
         />
         <Botao 
           texto="Meus locais" 

@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, Image } from 'react-native';
-import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
 const Buscar = () => {
   const [query, setQuery] = useState('');
   const [places, setPlaces] = useState([]);
   const [nextPageToken, setNextPageToken] = useState(null);
-//  const navigation = useNavigation();
-const router = useRouter(); //adc essa parte aqui
+  const navigation = useNavigation();
 
   const fetchPlaces = async (pageToken = '') => {
     try {
@@ -33,7 +32,7 @@ const router = useRouter(); //adc essa parte aqui
   };
 
   const handleCardPress = (place) => {
-    router.push('/Detalhes', { place });
+    navigation.navigate('Detalhes', { place });
   };
 
   const renderPlace = ({ item }) => (
@@ -66,7 +65,7 @@ const router = useRouter(); //adc essa parte aqui
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <TouchableOpacity onPress={() => router.push('/Explorar')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Explorar')}>
           <Image source={require('../assets/seta.png')} style={styles.seta} />
         </TouchableOpacity>
       </View>
