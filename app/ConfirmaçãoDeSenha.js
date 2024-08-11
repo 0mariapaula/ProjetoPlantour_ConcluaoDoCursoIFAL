@@ -1,33 +1,45 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
-import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { useRouter, useSearchParams } from 'expo-router';
+import { getAuth, confirmPasswordReset } from 'firebase/auth';
+import { app } from '../firebaseConfig'; // Verifique se está importando o app corretamente
 
 const ConfirmaçãoDeSenha = () => {
-  //const navigation = useNavigation();
-  const router = useRouter(); //adc essa parte aqui
+  const router = useRouter();
+  const { oobCode } = useSearchParams(); // Pega o código da URL
   const [novaSenha, setNovaSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
 
-  const handleUpdatePassword = () => {
+  useEffect(() => {
+    if (!oobCode) {
+      Alert.alert('Erro', 'Código de redefinição de senha inválido.');
+      router.push('/EsqueceuSenha'); // Redirecionar se o código não estiver presente
+    }
+  }, [oobCode]);
+
+  const handleUpdatePassword = async () => {
     const trimmedNovaSenha = novaSenha.trim();
     const trimmedConfirmarSenha = confirmarSenha.trim();
 
     if (trimmedNovaSenha !== trimmedConfirmarSenha) {
-      Alert.alert("Erro", "As senhas não coincidem. Por favor, tente novamente.");
+      Alert.alert('Erro', 'As senhas não coincidem. Por favor, tente novamente.');
     } else if (!trimmedNovaSenha || !trimmedConfirmarSenha) {
-      Alert.alert("Erro", "As senhas não podem ser apenas espaços em branco.");
+      Alert.alert('Erro', 'As senhas não podem ser apenas espaços em branco.');
     } else {
-      // Aqui você pode adicionar a lógica para atualizar a senha
-      console.log('Nova Senha:', trimmedNovaSenha);
-      console.log('Confirmar Senha:', trimmedConfirmarSenha);
-      Alert.alert("Sucesso", "Senha atualizada com sucesso!");
+      try {
+        const auth = getAuth(app);
+        await confirmPasswordReset(auth, oobCode, trimmedNovaSenha);
+        Alert.alert('Sucesso', 'Senha atualizada com sucesso!');
+        router.push('/Login'); // Redirecionar para a tela de login
+      } catch (error) {
+        Alert.alert('Erro', 'Ocorreu um erro ao atualizar a senha. Por favor, tente novamente.');
+      }
     }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <Image style={styles.logo} source={require('./../assets/Cadeado.png')} />
         <Text style={styles.titulo}>Atualizar Senha</Text>
 
         <View style={styles.formContainer}>
