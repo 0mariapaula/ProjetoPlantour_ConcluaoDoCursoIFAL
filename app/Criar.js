@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Image, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Picker } from '@react-native-picker/picker';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { collection, addDoc } from 'firebase/firestore';
+import { db, storage } from './../firebaseConfig'; // ajuste o caminho conforme necessário
+import { v4 as uuidv4 } from 'uuid';
 
 const Criar = () => {
   const [titulo, setTitulo] = useState('');
   const [valor, setValor] = useState('');
   const [descricao, setDescricao] = useState('');
-  const [imagem, setImagem] = useState(null);
   const [endereco, setEndereco] = useState('');
   const [tipo, setTipo] = useState('');
-  // Novos campos para o tipo "Passeio"
-  const [data, setData] = useState('');
-  const [horario, setHorario] = useState('');
-  const [limitePessoas, setLimitePessoas] = useState('');
+  const [imagem, setImagem] = useState(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -24,128 +23,94 @@ const Criar = () => {
     });
 
     if (!result.canceled) {
-      setImagem(result.uri);
+      const uri = result.uri;
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const storageRef = ref(storage, `images/${uuidv4()}`);
+      
+      try {
+        await uploadBytes(storageRef, blob);
+        const downloadURL = await getDownloadURL(storageRef);
+        setImagem(downloadURL);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
     }
   };
 
-  const handlePost = () => {
-    // Handle the post logic here
-    console.log({ nome, valor, descricao, imagem, endereco, tipo, titulo, data, horario, limitePessoas });
-    // Reset the form fields
-    setNome('');
-    setValor('');
-    setDescricao('');
-    setImagem(null);
-    setEndereco('');
-    setTipo('');
-    setTitulo('');
-    setData('');
-    setHorario('');
-    setLimitePessoas('');
+  const handlePost = async () => {
+    if (!titulo || !valor || !descricao || !endereco || !tipo) {
+      Alert.alert('Erro', 'Todos os campos são obrigatórios!');
+      return;
+    }
+
+    const publicationData = {
+      titulo,
+      valor: parseFloat(valor),
+      descricao,
+      endereco,
+      tipo,
+      empresaId: 'id_da_empresa', // Substitua com o ID real da empresa
+      imagemUrl: imagem,
+    };
+
+    try {
+      await addDoc(collection(db, 'publicacoes'), publicationData);
+      Alert.alert('Sucesso', 'Publicação criada com sucesso!');
+      
+      // Resetar os campos
+      setTitulo('');
+      setValor('');
+      setDescricao('');
+      setEndereco('');
+      setTipo('');
+      setImagem(null);
+    } catch (error) {
+      console.error('Erro ao criar a publicação:', error);
+      Alert.alert('Erro', 'Não foi possível criar a publicação.');
+    }
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Postar Novo Card</Text>
-
-        <TouchableOpacity onPress={pickImage} style={styles.imagePicker}>
-          {imagem ? (
-            <Image source={{ uri: imagem }} style={styles.image} />
-          ) : (
-            <Text style={styles.imagePickerText}>Escolher Imagem</Text>
-          )}
-        </TouchableOpacity>
-
-        <TextInput
-              style={styles.input}
-              placeholder="Título"
-              value={titulo}
-              onChangeText={setTitulo}
-              placeholderTextColor="#888"
-            />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Valor"
-          value={valor}
-          onChangeText={setValor}
-          keyboardType="numeric"
-          placeholderTextColor="#888"
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Descrição"
-          value={descricao}
-          onChangeText={setDescricao}
-          multiline
-          placeholderTextColor="#888"
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Endereço"
-          value={endereco}
-          onChangeText={setEndereco}
-          placeholderTextColor="#888"
-        />
-
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={tipo}
-            onValueChange={(itemValue) => setTipo(itemValue)}
-            style={styles.picker}
-          >
-            <Picker.Item label="Selecione o Tipo" value="" />
-            <Picker.Item label="Restaurante" value="restaurante" />
-            <Picker.Item label="Hotel" value="hotel" />
-            <Picker.Item label="Bar" value="bar" />
-            <Picker.Item label="Ponto Turístico" value="Ponto Turístico" />
-            <Picker.Item label="Cafeteria" value="cafeteria" />
-            <Picker.Item label="Passeio" value="Passeio" />
-          </Picker>
-        </View>
-
-        {/* Campos adicionais para o tipo "Passeio" */}
-        {tipo === 'Passeio' && (
-          <>
-           
-
-            <TextInput
-              style={styles.input}
-              placeholder="Data"
-              value={data}
-              onChangeText={setData}
-              placeholderTextColor="#888"
-            />
-
-            <TextInput
-              style={styles.input}
-              placeholder="Horário"
-              value={horario}
-              onChangeText={setHorario}
-              placeholderTextColor="#888"
-            />
-
-            <TextInput
-              style={styles.input}
-              placeholder="Limite de Pessoas"
-              value={limitePessoas}
-              onChangeText={setLimitePessoas}
-              keyboardType="numeric"
-              placeholderTextColor="#888"
-            />
-          </>
-        )}
-
-        <TouchableOpacity onPress={handlePost} style={styles.button}>
-          <Text style={styles.buttonText}>Postar</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="Título"
+        value={titulo}
+        onChangeText={setTitulo}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Valor"
+        keyboardType="numeric"
+        value={valor}
+        onChangeText={setValor}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Descrição"
+        value={descricao}
+        onChangeText={setDescricao}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Endereço"
+        value={endereco}
+        onChangeText={setEndereco}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Tipo"
+        value={tipo}
+        onChangeText={setTipo}
+      />
+      <Button title="Selecionar Imagem" onPress={pickImage} />
+      {imagem && <Image source={{ uri: imagem }} style={styles.image} />}
+      <Button title="Criar Publicação" onPress={handlePost} />
+    </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   scrollContainer: {

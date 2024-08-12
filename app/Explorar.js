@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Modal, TextInput } from 'react-native';
-import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
-import BottomNavBar from './BottomNavBar'; // Certifique-se de ajustar o caminho conforme necessário
-import Icon from 'react-native-vector-icons/FontAwesome'; // Importando ícones do FontAwesome
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Modal } from 'react-native';
+import { useRouter } from 'expo-router';
+import BottomNavBar from './BottomNavBar';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { collection, getDocs } from "firebase/firestore";
+import { db } from './../firebaseConfig'; // ajuste o caminho conforme necessário
 
 const Explorar = () => {
-  //  const navigation = useNavigation();
-  const router = useRouter(); //adc essa parte aqui
+  const router = useRouter();
   const [modalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [configModalVisible, setConfigModalVisible] = useState(false); // Estado para o modal de configurações
+  const [configModalVisible, setConfigModalVisible] = useState(false);
+  const [publicacoes, setPublicacoes] = useState([]);
+
+  useEffect(() => {
+    const fetchPublicacoes = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "publicacoes"));
+        const data = querySnapshot.docs.map(doc => doc.data());
+        setPublicacoes(data);
+      } catch (error) {
+        console.error('Erro ao buscar publicações:', error);
+      }
+    };
+
+    fetchPublicacoes();
+  }, []);
 
   const openSearchModal = () => {
     setModalVisible(true);
@@ -54,26 +70,19 @@ const Explorar = () => {
           <Text style={styles.textoTitulo2}>Locais mais visitados no mundo</Text>
 
           <View style={styles.cardContainer}>
-            <TouchableOpacity style={styles.card} onPress={() => router.push('/CardDetalhes')}>
-              <Image source={require('../assets/paris.png')} style={styles.cardImage} />
-              <Text style={styles.cardTitle}>Paris - França</Text>
-              <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.card}>
-              <Image source={require('../assets/maceio.png')} style={styles.cardImage} />
-              <Text style={styles.cardTitle}>Maceió - Brasil</Text>
-              <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.card}>
-              <Image source={require('../assets/paris.png')} style={styles.cardImage} />
-              <Text style={styles.cardTitle}>Paris - França</Text>
-              <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.card}>
-              <Image source={require('../assets/espanha.png')} style={styles.cardImage} />
-              <Text style={styles.cardTitle}>Espanha</Text>
-              <Text style={styles.cardDescription}>lore lore lore lore lore lore lore lore lore</Text>
-            </TouchableOpacity>
+            {publicacoes.map((pub, index) => (
+              <TouchableOpacity key={index} style={styles.card} onPress={() => router.push('/CardDetalhes')}>
+                {pub.imagemUrl ? (
+                  <Image source={{ uri: pub.imagemUrl }} style={styles.cardImage} />
+                ) : (
+                  <View style={styles.noImage}>
+                    <Text style={styles.noImageText}>Sem Imagem</Text>
+                  </View>
+                )}
+                <Text style={styles.cardTitle}>{pub.titulo}</Text>
+                <Text style={styles.cardDescription}>{pub.descricao}</Text>
+              </TouchableOpacity>
+            ))}
 
             <Text style={styles.textoTitulo3}>Restaurantes próximos de você</Text>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.carouselContainer}>
