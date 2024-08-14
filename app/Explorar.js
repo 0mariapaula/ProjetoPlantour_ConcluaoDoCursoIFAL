@@ -66,8 +66,8 @@ const Explorar = () => {
             <Text style={styles.buttonTextB}>Hoteis</Text>
           </TouchableOpacity>
 
-          <Text style={styles.textoTitulo}>Populares da semana</Text>
-          <Text style={styles.textoTitulo2}>Locais mais visitados no mundo</Text>
+          <Text style={styles.textoTitulo}>Restaurantes</Text>
+          <Text style={styles.textoTitulo2}>Hotel</Text>
 
           <View style={styles.cardContainer}>
             {publicacoes.map((pub, index) => (
