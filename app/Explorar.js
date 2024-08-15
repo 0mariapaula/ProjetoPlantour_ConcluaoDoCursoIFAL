@@ -2,25 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
 import BottomNavBar from './BottomNavBar';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from './../firebaseConfig';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Ou o ícone que você estiver usando
 
 const Explorar = () => {
   const router = useRouter();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [configModalVisible, setConfigModalVisible] = useState(false);
   const [publicacoes, setPublicacoes] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const querySnapshot = await getDocs(collection(db, "publicacoes"));
-      const fetchedPublicacoes = querySnapshot.docs.map(doc => doc.data());
-      setPublicacoes(fetchedPublicacoes);
-    };
-
-    fetchData();
-  }, []);
+  const [configModalVisible, setConfigModalVisible] = useState(false);
 
   const openConfigModal = () => {
     setConfigModalVisible(true);
@@ -28,6 +17,38 @@ const Explorar = () => {
 
   const closeConfigModal = () => {
     setConfigModalVisible(false);
+  };
+
+  useEffect(() => {
+    const fetchPublicacoes = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "publicacoes"));
+        const data = querySnapshot.docs.map(doc => doc.data());
+        setPublicacoes(data);
+      } catch (error) {
+        console.error('Erro ao buscar publicações:', error);
+      }
+    };
+
+    fetchPublicacoes();
+  }, []);
+
+  const renderPublicacoesPorTipo = (tipo) => {
+    return publicacoes
+      .filter(pub => pub.tipo === tipo)
+      .map((pub, index) => (
+        <TouchableOpacity key={index} style={styles.card} onPress={() => router.push('/CardDetalhes')}>
+          {pub.imagemUrl ? (
+            <Image source={{ uri: pub.imagemUrl }} style={styles.cardImage} />
+          ) : (
+            <View style={styles.noImage}>
+              <Text style={styles.noImageText}>Sem Imagem</Text>
+            </View>
+          )}
+          <Text style={styles.cardTitle}>{pub.titulo}</Text>
+          <Text style={styles.cardDescription}>{pub.descricao}</Text>
+        </TouchableOpacity>
+      ));
   };
 
   return (
@@ -39,46 +60,53 @@ const Explorar = () => {
             <TouchableOpacity onPress={openConfigModal}>
               <Image source={require('../assets/configuracao.png')} style={styles.configuracao} />
             </TouchableOpacity>
+            <View style={styles.buttonWrapper}>
+              <View style={styles.buttonRow}>
+                <TouchableOpacity style={styles.button}>
+                  <Text style={styles.buttonTextB}>Restaurantes</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button}>
+                  <Text style={styles.buttonTextB}>Roteiros</Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity style={styles.buttonHotel}>
+                <Text style={styles.buttonTextB}>Hotéis</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonTextB}>Restaurantes</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.button2}>
-            <Text style={styles.buttonTextB}>Roteiros</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.button3}>
-            <Text style={styles.buttonTextB}>Hoteis</Text>
-          </TouchableOpacity>
-
-          <Text style={styles.textoTitulo}>Populares da semana</Text>
-
+          <Text style={styles.textoTitulo}>Restaurantes</Text>
           <View style={styles.cardContainer}>
-            {publicacoes.map((publicacao, index) => (
-              <TouchableOpacity key={index} style={styles.card} onPress={() => router.push('/CardDetalhes')}>
-                <Image source={{ uri: publicacao.imageUrl }} style={styles.cardImage} />
-                <Text style={styles.cardTitle}>{publicacao.title}</Text>
-                <Text style={styles.cardDescription}>{publicacao.description}</Text>
-              </TouchableOpacity>
-            ))}
+            {renderPublicacoesPorTipo('restaurante')}
           </View>
 
-          <Text style={styles.textoTitulo3}>Restaurantes próximos de você</Text>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.carouselContainer}>
-            {publicacoes.filter(pub => pub.category === 'Restaurante').map((publicacao, index) => (
-              <TouchableOpacity key={index} style={styles.cardCarousel}>
-                <Image source={{ uri: publicacao.imageUrl }} style={styles.cardImageCarrossel} />
-                <Text style={styles.cardTitle}>{publicacao.title}</Text>
-                <Text style={styles.cardDescription}>{publicacao.description}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+          <Text style={styles.textoTitulo}>Hotéis</Text>
+          <View style={styles.cardContainer}>
+            {renderPublicacoesPorTipo('hotel')}
+          </View>
+
+          <Text style={styles.textoTitulo}>Bares</Text>
+          <View style={styles.cardContainer}>
+            {renderPublicacoesPorTipo('bar')}
+          </View>
+
+          <Text style={styles.textoTitulo}>Pontos Turísticos</Text>
+          <View style={styles.cardContainer}>
+            {renderPublicacoesPorTipo('Ponto Turístico')}
+          </View>
+
+          <Text style={styles.textoTitulo}>Cafeterias</Text>
+          <View style={styles.cardContainer}>
+            {renderPublicacoesPorTipo('cafeteria')}
+          </View>
+
+          <Text style={styles.textoTitulo}>Passeios</Text>
+          <View style={styles.cardContainer}>
+            {renderPublicacoesPorTipo('Passeio')}
+          </View>
         </View>
       </ScrollView>
-
-      <BottomNavBar openSearchModal={() => setModalVisible(true)} />
+      <BottomNavBar />
 
       <Modal
         animationType="slide"
@@ -127,14 +155,13 @@ const Explorar = () => {
 };
 
 const styles = StyleSheet.create({
-  // Aqui estão as definições de estilo, iguais às que você forneceu
   mainContainer: {
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingBottom: 70, // Espacinho extra para a barra de navegação
+    paddingBottom: 70,
   },
   container: {
     alignItems: 'center',
@@ -142,19 +169,38 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   inputContainer: {
-    height: '15%', // aqui
-    paddingTop: 0,
     width: '100%',
     backgroundColor: '#2D9AFF',
-    borderRadius: 0,
     padding: 20,
-    top: 10,
+    paddingBottom: 100, // Ajuste para acomodar os botões
+    position: 'relative',
   },
   configuracao: {
-    left: 320,
     width: 30,
     height: 30,
-    top: 40,
+    position: 'absolute',
+    right: 20,
+    top: 20,
+  },
+  label: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 25,
+    marginBottom: 10,
+    position: 'absolute',
+    left: 20,
+    top: 20,
+  },
+  buttonWrapper: {
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 60, // Ajuste a margem superior para posicionar os botões abaixo do nome
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+    marginBottom: 20,
   },
   button: {
     width: '45%',
@@ -163,97 +209,48 @@ const styles = StyleSheet.create({
     borderRadius: 35,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20,
-    marginBottom: 20,
-    bottom: 150,
-    right: 100,
   },
-  button2: {
+  buttonHotel: {
     width: '45%',
     height: 50,
     backgroundColor: '#FFFFFF',
     borderRadius: 35,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20,
-    marginBottom: 20,
-    bottom: 240,
-    left: 100,
-  },
-  button3: {
-    width: '45%',
-    height: 50,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 35,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-    marginBottom: 20,
-    bottom: 260,
-    left: 10,
   },
   buttonTextB: {
-    color: '#3A3A3A',
-    fontSize: 15,
     fontWeight: 'bold',
+    color: '#2D9AFF',
   },
   textoTitulo: {
-    marginBottom: 5,
+    width: '90%',
     color: '#242424',
-    textAlign: 'justify',
     fontWeight: 'bold',
     fontSize: 20,
-    bottom: 230,
-    right: 80,
-  },
-  textoTitulo2: {
-    marginBottom: 5,
-    color: '#242424',
-    textAlign: 'justify',
-    fontWeight: 'bold',
-    fontSize: 20,
-    bottom: 20,
-    right: 30,
-  },
-  textoTitulo3: {
-    marginBottom: 5,
-    color: '#242424',
-    textAlign: 'justify',
-    fontWeight: 'bold',
-    fontSize: 20,
-    bottom: 20,
-    left: 20,
-  },
-  label: {
-    marginBottom: 5,
-    color: '#FFFFFF',
-    textAlign: 'justify',
-    fontWeight: 'bold',
-    fontSize: 25,
-    top: 80,
+    marginTop: 20,
   },
   cardContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginTop: 20,
-    bottom: 280,
+    width: '90%',
+    marginBottom: 20,
   },
   card: {
-    width: '50%',
-    backgroundColor: '#FFFFFF',
+    width: '48%',
+    backgroundColor: '#F8F8F8',
     borderRadius: 10,
     padding: 10,
     marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 5,
+    elevation: 3,
   },
   cardImage: {
     width: '100%',
-    height: 120,
+    height: 100,
     borderRadius: 10,
     marginBottom: 10,
   },
@@ -261,32 +258,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 5,
+    color: '#333333',
   },
   cardDescription: {
-    fontSize: 14,
-    color: '#555',
+    textAlign: 'center',
+    color: '#555555',
   },
-  carouselContainer: {
-    marginTop: 20,
-    bottom: 50,
-  },
-  cardCarousel: {
-    width: 150,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    padding: 10,
-    marginRight: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  cardImageCarrossel: {
+  noImage: {
     width: '100%',
-    height: 120,
+    height: 100,
     borderRadius: 10,
+    backgroundColor: '#E0E0E0',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 10,
+  },
+  noImageText: {
+    color: '#888',
   },
   modalContainer: {
     flex: 1,
@@ -296,36 +284,33 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '80%',
-    backgroundColor: '#fff',
-    borderRadius: 10,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    alignItems: 'center',
   },
   configOption: {
+    width: '100%',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#DDD',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+  },
+  configOptionText: {
+    fontSize: 16,
+    marginLeft: 10,
   },
   configIcon: {
     marginRight: 10,
   },
-  configOptionText: {
-    fontSize: 16,
-    color: '#000',
-  },
   closeButton: {
     marginTop: 20,
-    alignItems: 'center',
+    padding: 10,
   },
   closeButtonText: {
-    fontSize: 18,
     color: '#007BFF',
+    fontSize: 16,
   },
 });
 

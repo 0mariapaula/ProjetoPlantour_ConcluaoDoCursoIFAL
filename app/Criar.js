@@ -25,6 +25,8 @@ const Criar = () => {
 
     if (!result.canceled) {
       const uri = result.uri;
+      console.log('Image URI:', uri);  // Adicione este log para verificar o URI da imagem
+
       const response = await fetch(uri);
       const blob = await response.blob();
       const storageRef = ref(storage, `images/${uuidv4()}`);
@@ -32,6 +34,7 @@ const Criar = () => {
       try {
         await uploadBytes(storageRef, blob);
         const downloadURL = await getDownloadURL(storageRef);
+        console.log('Download URL:', downloadURL);  // Adicione este log para verificar a URL de download
         setImagem(downloadURL);
       } catch (error) {
         console.error('Error uploading image:', error);
