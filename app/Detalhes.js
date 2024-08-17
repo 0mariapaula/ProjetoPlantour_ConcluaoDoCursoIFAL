@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { useNavigation, useRoute } from 'expo-router';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const Detalhes = () => {
   const navigation = useNavigation();

@@ -37,7 +37,14 @@ const Explorar = () => {
     return publicacoes
       .filter(pub => pub.tipo === tipo)
       .map((pub, index) => (
-        <TouchableOpacity key={index} style={styles.card} onPress={() => router.push('/CardDetalhes')}>
+        <TouchableOpacity 
+          key={index} 
+          style={styles.card} 
+          onPress={() => router.push({
+            pathname: '/CardDetalhes',
+            params: { pubDetails: pub }
+          })}
+        >
           {pub.imagemUrl ? (
             <Image source={{ uri: pub.imagemUrl }} style={styles.cardImage} />
           ) : (

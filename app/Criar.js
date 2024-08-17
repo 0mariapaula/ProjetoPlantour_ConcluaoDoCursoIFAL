@@ -5,7 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc } from 'firebase/firestore';
 import { db, storage } from './../firebaseConfig'; // ajuste o caminho conforme necessário
-import { v4 as uuidv4 } from 'uuid';
+import uuid from 'react-native-uuid';  // Alterado para importar react-native-uuid
 
 const Criar = () => {
   const [titulo, setTitulo] = useState('');
@@ -22,25 +22,38 @@ const Criar = () => {
       aspect: [4, 3],
       quality: 1,
     });
-
-    if (!result.canceled) {
-      const uri = result.uri;
-      console.log('Image URI:', uri);  // Adicione este log para verificar o URI da imagem
-
-      const response = await fetch(uri);
-      const blob = await response.blob();
-      const storageRef = ref(storage, `images/${uuidv4()}`);
-      
+  
+    console.log('ImagePicker result:', result);
+  
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const uri = result.assets[0].uri;
+      console.log('Image URI:', uri);
+  
       try {
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        const storageRef = ref(storage, `images/${uuid.v4()}`);
+        
+        // Upload the image
         await uploadBytes(storageRef, blob);
+  
+        // Get the download URL
         const downloadURL = await getDownloadURL(storageRef);
-        console.log('Download URL:', downloadURL);  // Adicione este log para verificar a URL de download
+        console.log('Download URL:', downloadURL);
+  
+        // Set the image URL state
         setImagem(downloadURL);
       } catch (error) {
         console.error('Error uploading image:', error);
+        Alert.alert('Erro', 'Não foi possível fazer o upload da imagem.');
       }
+    } else {
+      console.error('No image selected or URI is undefined');
+      Alert.alert('Erro', 'Nenhuma imagem selecionada ou URI indefinida.');
     }
   };
+  
+  
 
   const handlePost = async () => {
     if (!titulo || !valor || !descricao || !endereco || !tipo) {
