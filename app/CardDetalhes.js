@@ -4,7 +4,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 
 const CardDetalhes = () => {
   const router = useRouter();
-  const { pubDetails } = useLocalSearchParams(); // Obtém os detalhes da publicação passados
+  const { imagemUrl, titulo, descricao, endereco, tipo, valor } = useLocalSearchParams();
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -19,18 +19,19 @@ const CardDetalhes = () => {
       </View>
       <View style={styles.cardContainer}>
         <View style={styles.card}>
-          {pubDetails?.imagemUrl ? (
-            <Image source={{ uri: pubDetails.imagemUrl }} style={styles.cardImage} />
+          {imagemUrl ? (
+            <Image source={{ uri: imagemUrl }} style={styles.cardImage} />
           ) : (
             <View style={styles.noImage}>
               <Text style={styles.noImageText}>Sem Imagem</Text>
             </View>
           )}
           <View style={styles.cardContent}>
-            <Text style={styles.cardTitle}>{pubDetails?.titulo}</Text>
-            <Text style={styles.cardSubtitle}>Endereço: {pubDetails?.endereco}</Text>
-            <Text style={styles.cardSubtitle}>Tipo: {pubDetails?.tipo}</Text>
-            <Text style={styles.cardDescription}>{pubDetails?.descricao}</Text>
+            <Text style={styles.cardTitle}>{titulo}</Text>
+            <Text style={styles.cardSubtitle}>Endereço: {endereco}</Text>
+            <Text style={styles.cardSubtitle}>Tipo: {tipo}</Text>
+            <Text style={styles.cardSubtitle}>Valor: {valor}</Text>
+            <Text style={styles.cardDescription}>{descricao}</Text>
           </View>
         </View>
       </View>

@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import BottomNavBar from './BottomNavBar';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from './../firebaseConfig';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Ou o ícone que você estiver usando
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Explorar = () => {
   const router = useRouter();
@@ -23,7 +23,7 @@ const Explorar = () => {
     const fetchPublicacoes = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "publicacoes"));
-        const data = querySnapshot.docs.map(doc => doc.data());
+        const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setPublicacoes(data);
       } catch (error) {
         console.error('Erro ao buscar publicações:', error);
@@ -42,7 +42,14 @@ const Explorar = () => {
           style={styles.card} 
           onPress={() => router.push({
             pathname: '/CardDetalhes',
-            params: { pubDetails: pub }
+            params: { 
+              imagemUrl: pub.imagemUrl,
+              titulo: pub.titulo,
+              valor: pub.valor,
+              descricao: pub.descricao,
+              endereco: pub.endereco,
+              tipo: pub.tipo
+            }
           })}
         >
           {pub.imagemUrl ? (
@@ -162,6 +169,7 @@ const Explorar = () => {
 };
 
 const styles = StyleSheet.create({
+  // (mesmos estilos do código anterior)
   mainContainer: {
     flex: 1,
     backgroundColor: '#FFFFFF',
@@ -241,40 +249,27 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     width: '90%',
-    marginBottom: 20,
+    marginTop: 10,
   },
   card: {
     width: '48%',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#FFFFFF',
     borderRadius: 10,
-    padding: 10,
-    marginBottom: 20,
+    overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
     elevation: 3,
+    marginBottom: 20,
   },
   cardImage: {
     width: '100%',
     height: 100,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  cardTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 5,
-    color: '#333333',
-  },
-  cardDescription: {
-    textAlign: 'center',
-    color: '#555555',
   },
   noImage: {
     width: '100%',
     height: 100,
-    borderRadius: 10,
     backgroundColor: '#E0E0E0',
     justifyContent: 'center',
     alignItems: 'center',
@@ -283,6 +278,19 @@ const styles = StyleSheet.create({
   noImageText: {
     color: '#888',
   },
+  cardTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    padding: 10,
+    paddingBottom: 0,
+    color: '#333',
+  },
+  cardDescription: {
+    fontSize: 14,
+    padding: 10,
+    paddingTop: 5,
+    color: '#666',
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -290,33 +298,33 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
+    backgroundColor: 'white',
     width: '80%',
-    padding: 20,
-    backgroundColor: '#FFFFFF',
     borderRadius: 10,
+    padding: 20,
+  },
+  closeButton: {
+    backgroundColor: '#2D9AFF',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 20,
     alignItems: 'center',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
   configOption: {
-    width: '100%',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#DDD',
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  configOptionText: {
-    fontSize: 16,
-    marginLeft: 10,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
   },
   configIcon: {
     marginRight: 10,
   },
-  closeButton: {
-    marginTop: 20,
-    padding: 10,
-  },
-  closeButtonText: {
-    color: '#007BFF',
+  configOptionText: {
     fontSize: 16,
   },
 });
