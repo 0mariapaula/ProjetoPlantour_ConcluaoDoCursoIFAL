@@ -115,11 +115,11 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 50,
     borderWidth: 1,
-    borderColor: '#cccccc',
-    borderRadius: 50,
-    paddingHorizontal: 20,
+    borderColor: '#3A3A3A', // Cor da borda ajustada para um tom de cinza claro
+    borderRadius: 8, // Arredondamento dos cantos para combinar com o estilo da imagem
+    paddingHorizontal: 10,
     marginBottom: 15,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#fff', // Cor de fundo branca
   },
   input2: {
     color: '#2D9AFF',

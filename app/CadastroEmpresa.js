@@ -62,8 +62,6 @@ const CadastroEmpresa = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.inputContainer}>
           <Image style={styles.logo} source={require('./../assets/logo.png')} />
-          <Text style={styles.title}>Cadastro de empresa</Text>
-
           <Text style={styles.label}>CNPJ:</Text>
           <TextInput
             style={styles.input}
@@ -177,11 +175,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 50,
     borderWidth: 1,
-    borderColor: '#cccccc',
-    borderRadius: 30,
+    borderColor: '#3A3A3A', // Cor da borda ajustada para um tom de cinza claro
+    borderRadius: 8, // Arredondamento dos cantos para combinar com o estilo da imagem
     paddingHorizontal: 10,
     marginBottom: 15,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#fff', // Cor de fundo branca
   },
   title: {
     fontSize: 24,
@@ -190,7 +188,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    width: '50%',
+    width: '70%',
     height: 50,
     backgroundColor: '#2D9AFF',
     borderRadius: 35,
