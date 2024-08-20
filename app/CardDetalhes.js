@@ -1,10 +1,52 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { doc, deleteDoc } from 'firebase/firestore';
+import { db } from './../firebaseConfig';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const CardDetalhes = () => {
   const router = useRouter();
-  const { imagemUrl, titulo, descricao, endereco, tipo, valor } = useLocalSearchParams();
+  const { imagemUrl, titulo, descricao, endereco, tipo, valor, id, userId } = useLocalSearchParams();
+
+  const deletePublicacao = async () => {
+    Alert.alert(
+      "Excluir Publicação",
+      "Você tem certeza que deseja excluir esta publicação?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel"
+        },
+        {
+          text: "Excluir",
+          onPress: async () => {
+            try {
+              await deleteDoc(doc(db, 'publicacoes', id));
+              router.push('/Explorar');
+            } catch (error) {
+              console.error('Erro ao excluir publicação:', error);
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  const editPublicacao = () => {
+    router.push({
+      pathname: '/EditarPublicacao',
+      params: { 
+        id, 
+        imagemUrl, 
+        titulo,
+        descricao,
+        endereco,
+        tipo,
+        valor 
+      }
+    });
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -12,7 +54,6 @@ const CardDetalhes = () => {
         <TouchableOpacity onPress={() => router.push('/Explorar')}>
           <Image source={require('../assets/seta.png')} style={styles.seta} />
         </TouchableOpacity>
-
         <TouchableOpacity>
           <Image source={require('../assets/configuracao.png')} style={styles.configuracao} />
         </TouchableOpacity>
@@ -32,6 +73,14 @@ const CardDetalhes = () => {
             <Text style={styles.cardSubtitle}>Tipo: {tipo}</Text>
             <Text style={styles.cardSubtitle}>Valor: {valor}</Text>
             <Text style={styles.cardDescription}>{descricao}</Text>
+          </View>
+          <View style={styles.actionContainer}>
+            <TouchableOpacity style={styles.editButton} onPress={editPublicacao}>
+              <Icon name="edit" size={20} color="#2D9AFF" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.deleteButton} onPress={deletePublicacao}>
+              <Icon name="trash" size={20} color="red" />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -72,6 +121,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 3,
     marginBottom: 20,
+    paddingBottom: 60, // Ajuste para acomodar os botões
   },
   cardImage: {
     width: '100%',
@@ -115,6 +165,23 @@ const styles = StyleSheet.create({
   },
   noImageText: {
     color: '#888',
+  },
+  actionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  editButton: {
+    backgroundColor: '#E0E0E0',
+    borderRadius: 5,
+    padding: 10,
+    marginRight: 10,
+  },
+  deleteButton: {
+    backgroundColor: '#E0E0E0',
+    borderRadius: 5,
+    padding: 10,
   },
 });
 

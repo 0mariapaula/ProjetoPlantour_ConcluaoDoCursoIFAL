@@ -38,20 +38,21 @@ const Explorar = () => {
       .filter(pub => pub.tipo === tipo)
       .map((pub, index) => (
         <TouchableOpacity 
-          key={index} 
-          style={styles.card} 
-          onPress={() => router.push({
-            pathname: '/CardDetalhes',
-            params: { 
-              imagemUrl: pub.imagemUrl,
-              titulo: pub.titulo,
-              valor: pub.valor,
-              descricao: pub.descricao,
-              endereco: pub.endereco,
-              tipo: pub.tipo
-            }
-          })}
-        >
+        key={index} 
+        style={styles.card} 
+        onPress={() => router.push({
+          pathname: '/CardDetalhes',
+          params: { 
+            imagemUrl: pub.imagemUrl,
+            titulo: pub.titulo,
+            valor: pub.valor,
+            descricao: pub.descricao,
+            endereco: pub.endereco,
+            tipo: pub.tipo,
+            id: pub.id
+          }
+        })}
+      >
           {pub.imagemUrl ? (
             <Image source={{ uri: pub.imagemUrl }} style={styles.cardImage} />
           ) : (
