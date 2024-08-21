@@ -1,34 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from './../firebaseConfig';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import Icon from 'react-native-vector-icons/Feather';
 
 const EditarPublicacao = () => {
   const router = useRouter();
-  const { id, imagemUrl, titulo, descricao, endereco, tipo, valor } = useLocalSearchParams();
+  const { id, titulo, descricao, endereco, valor } = useLocalSearchParams();
 
   const [nome, setNome] = useState(titulo);
   const [descricaoState, setDescricaoState] = useState(descricao);
   const [enderecoState, setEnderecoState] = useState(endereco);
   const [valorState, setValorState] = useState(valor);
-  const [dataInicio, setDataInicio] = useState(new Date());
-  const [dataFinal, setDataFinal] = useState(new Date());
-  const [showInicio, setShowInicio] = useState(false);
-  const [showFinal, setShowFinal] = useState(false);
-
-  const onChangeInicio = (event, selectedDate) => {
-    const currentDate = selectedDate || dataInicio;
-    setShowInicio(Platform.OS === 'ios');
-    setDataInicio(currentDate);
-  };
-
-  const onChangeFinal = (event, selectedDate) => {
-    const currentDate = selectedDate || dataFinal;
-    setShowFinal(Platform.OS === 'ios');
-    setDataFinal(currentDate);
-  };
 
   const saveChanges = async () => {
     try {
@@ -38,8 +22,6 @@ const EditarPublicacao = () => {
         descricao: descricaoState,
         endereco: enderecoState,
         valor: valorState,
-        dataInicio: dataInicio.toISOString(),
-        dataFinal: dataFinal.toISOString(),
       });
       router.push('/Explorar');
     } catch (error) {
@@ -48,77 +30,128 @@ const EditarPublicacao = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Título</Text>
-        <TextInput
-          style={styles.input}
-          value={nome}
-          onChangeText={setNome}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Descrição</Text>
-        <TextInput
-          style={styles.input}
-          value={descricaoState}
-          onChangeText={setDescricaoState}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Endereço</Text>
-        <TextInput
-          style={styles.input}
-          value={enderecoState}
-          onChangeText={setEnderecoState}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Valor</Text>
-        <TextInput
-          style={styles.input}
-          value={valorState}
-          onChangeText={setValorState}
-        />
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Editar Publicação</Text>
+      <View style={styles.inputContainer}>
+        <View style={styles.inputGroup}>
+          <View style={styles.iconContainer}>
+            <Icon name="tag" size={20} color="#2D9AFF" />
+            <Text style={styles.iconText}>Título</Text>
+          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite o título"
+            value={nome}
+            onChangeText={setNome}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <View style={styles.iconContainer}>
+            <Icon name="file-text" size={20} color="#2D9AFF" />
+            <Text style={styles.iconText}>Descrição</Text>
+          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite a descrição"
+            value={descricaoState}
+            onChangeText={setDescricaoState}
+            multiline
+            numberOfLines={4}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <View style={styles.iconContainer}>
+            <Icon name="map-pin" size={20} color="#2D9AFF" />
+            <Text style={styles.iconText}>Endereço</Text>
+          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite o endereço"
+            value={enderecoState}
+            onChangeText={setEnderecoState}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <View style={styles.iconContainer}>
+            <Icon name="dollar-sign" size={20} color="#2D9AFF" />
+            <Text style={styles.iconText}>Valor</Text>
+          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite o valor"
+            value={valorState}
+            onChangeText={setValorState}
+            keyboardType="numeric"
+          />
+        </View>
       </View>
       <TouchableOpacity style={styles.button} onPress={saveChanges}>
         <Text style={styles.buttonText}>Salvar</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.push('/Explorar')}>
-        <Text>Voltar</Text>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.push('/Explorar')}>
+        <Text style={styles.backButtonText}>Voltar</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F5F5F5',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#2D9AFF',
+    marginBottom: 30,
+  },
+  inputContainer: {
+    width: '100%',
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: 25,
   },
-  label: {
-    fontSize: 16,
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 5,
+  },
+  iconText: {
+    fontSize: 16,
+    color: '#333',
+    marginLeft: 10,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#CCC',
+    borderColor: '#DDDDDD',
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    fontSize: 16,
   },
   button: {
     backgroundColor: '#2D9AFF',
-    padding: 10,
-    borderRadius: 5,
+    padding: 15,
+    borderRadius: 8,
+    width: '100%',
     alignItems: 'center',
-    marginTop: 20,
+    marginVertical: 20,
   },
   buttonText: {
-    color: '#FFF',
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  backButton: {
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  backButtonText: {
+    color: '#2D9AFF',
     fontSize: 16,
   },
 });

@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#2D9AFF',
     padding: 20,
-    paddingBottom: 100, // Ajuste para acomodar os botões
+    paddingBottom: 40, // Ajuste para acomodar os botões
     position: 'relative',
   },
   configuracao: {
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     height: 30,
     position: 'absolute',
     right: 20,
-    top: 20,
+    top: 10,
   },
   label: {
     color: '#FFFFFF',
@@ -210,12 +210,12 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 60, // Ajuste a margem superior para posicionar os botões abaixo do nome
+    marginTop: 80, // Ajuste a margem superior para posicionar os botões abaixo do nome
   },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '80%',
+    width: '100%',
     marginBottom: 20,
   },
   button: {
@@ -236,7 +236,9 @@ const styles = StyleSheet.create({
   },
   buttonTextB: {
     fontWeight: 'bold',
-    color: '#2D9AFF',
+    color: '#3A3A3A',
+    fontSize: 17,
+
   },
   textoTitulo: {
     width: '90%',

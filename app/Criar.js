@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
@@ -8,6 +9,7 @@ import { db, storage } from './../firebaseConfig'; // ajuste o caminho conforme 
 import uuid from 'react-native-uuid';  // Alterado para importar react-native-uuid
 
 const Criar = () => {
+  const navigation = useNavigation();
   const [titulo, setTitulo] = useState('');
   const [valor, setValor] = useState('');
   const [descricao, setDescricao] = useState('');
@@ -90,6 +92,11 @@ const Criar = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
+       <View style={styles.inputContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('Explorar')} style={styles.setaContainer}>
+          <Image source={require('../assets/seta.png')} style={styles.seta} />
+        </TouchableOpacity>
+      </View>
       <View style={styles.container}>
         <Text style={styles.title}>Postar Novo Card</Text>
 
@@ -163,7 +170,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
-    padding: 16,
+    padding: 0,
     backgroundColor: '#F5F5F5',
   },
   container: {
@@ -176,6 +183,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  inputContainer: {
+    height: 80,
+    width: '100%',
+    backgroundColor: '#2D9AFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 0,
+    position: 'relative', // Permite que o elemento da seta seja posicionado de forma absoluta dentro do contêiner
+  },
+  setaContainer: {
+    position: 'absolute',
+    left: 20, // Distância da borda esquerda, ajuste conforme necessário
+  },
+  seta: {
+    width: 30, // Largura da seta, ajuste conforme necessário
+    height: 30, // Altura da seta, ajuste conforme necessário
   },
   title: {
     fontSize: 26,
