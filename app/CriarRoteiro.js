@@ -3,25 +3,25 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Platform, S
 import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+import { collection, addDoc } from "firebase/firestore";
+import { db } from './../firebaseConfig';
+import { getAuth } from 'firebase/auth';
+
 const CriarRoteiro = () => {
-//  const navigation = useNavigation();
-const router = useRouter(); //adc essa parte aqui
+  const router = useRouter();
 
   const [nome, setNome] = useState('');
-  const [locais, setLocais] = useState(['']); // Estado para armazenar a lista de locais
-
+  const [locais, setLocais] = useState(['']);
   const [dataInicio, setDataInicio] = useState(new Date());
   const [dataFinal, setDataFinal] = useState(new Date());
   const [visibilidade, setVisibilidade] = useState('Privado');
   const [showInicio, setShowInicio] = useState(false);
   const [showFinal, setShowFinal] = useState(false);
 
-  // Função para adicionar um novo campo de entrada de local
   const addLocalInput = () => {
     setLocais([...locais, '']);
   };
 
-  // Função para remover um campo de entrada de local
   const removeLocalInput = (index) => {
     const updatedLocais = [...locais];
     updatedLocais.splice(index, 1);
@@ -47,6 +47,24 @@ const router = useRouter(); //adc essa parte aqui
   const showDatepickerFinal = () => {
     setShowFinal(true);
   };
+
+const adicionarRoteiro = async () => {
+  try {
+    const usuarioId = 'ID_DO_USUARIO_AUTENTICADO'; // Substitua com o ID do usuário autenticado
+    await addDoc(collection(db, 'roteiros'), {
+      nome,
+      locais,
+      dataInicio: dataInicio.toISOString(),
+      dataFinal: dataFinal.toISOString(),
+      visibilidade,
+      usuarioId, // Certifique-se de adicionar o campo usuarioId
+    });
+    console.log('Roteiro criado com sucesso!');
+    router.push('/Viagens'); // Navegar de volta para a tela 'Viagens'
+  } catch (e) {
+    console.error('Erro ao adicionar documento: ', e);
+  }
+};
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -82,14 +100,14 @@ const router = useRouter(); //adc essa parte aqui
                       setLocais(updatedLocais);
                     }}
                   />
-                  {index === locais.length - 1 ? ( // Mostrar ícone de adição para o último campo de entrada
+                  {index === locais.length - 1 ? (
                     <TouchableOpacity style={styles.localButton} onPress={addLocalInput}>
                       <Image
                         source={{ uri: 'https://img.icons8.com/ios/452/plus.png' }}
                         style={styles.localIcon}
                       />
                     </TouchableOpacity>
-                  ) : ( // Mostrar ícone de remoção para os demais campos de entrada
+                  ) : (
                     <TouchableOpacity style={styles.localButton} onPress={() => removeLocalInput(index)}>
                       <Image
                         source={{ uri: 'https://img.icons8.com/android/452/minus.png' }}
@@ -162,7 +180,7 @@ const router = useRouter(); //adc essa parte aqui
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity style={[styles.button, styles.finalizarButton]}>
+          <TouchableOpacity style={[styles.button, styles.finalizarButton]} onPress={adicionarRoteiro}>
             <Text style={styles.finalizarButtonText}>Finalizar</Text>
           </TouchableOpacity>
         </View>
@@ -175,7 +193,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     backgroundColor: '#FFFFFF',
-    paddingBottom: 50, // Ajustar conforme necessário
+    paddingBottom: 50,
   },
   container: {
     flex: 1,

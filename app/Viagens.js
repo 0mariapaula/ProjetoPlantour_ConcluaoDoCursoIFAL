@@ -1,39 +1,68 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import BottomNavBar from './BottomNavBar'; // Certifique-se de ajustar o caminho conforme necessário
-import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
+import BottomNavBar from './BottomNavBar'; // Ajuste o caminho conforme necessário
+import { useRouter } from 'expo-router';
+import { db } from './../firebaseConfig'; // Ajuste o caminho conforme necessário
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 
 const Viagens = ({ openSearchModal }) => {
-//  const navigation = useNavigation();
-  const router = useRouter(); //adc essa parte aqui
+  const router = useRouter();
+  const [roteiros, setRoteiros] = useState([]);
+  
+  useEffect(() => {
+    const fetchRoteiros = async () => {
+      try {
+        const usuarioId = 'ID_DO_USUARIO_AUTENTICADO'; // Substitua com o ID do usuário autenticado
+        const roteirosRef = collection(db, 'roteiros');
+        const q = query(roteirosRef, where('usuarioId', '==', usuarioId));
+        
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const roteirosList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setRoteiros(roteirosList);
+        });
+
+        return () => unsubscribe(); // Limpeza do listener
+      } catch (error) {
+        console.error('Erro ao buscar roteiros: ', error);
+      }
+    };
+
+    fetchRoteiros();
+  }, []);
+  const handleRoteiroPress = (item) => {
+    router.push({
+      pathname: '/DetalhesRoteiro',
+      params: { roteiro: item },
+    });
+  };
+  
+
+  const renderRoteiroItem = ({ item }) => (
+    <TouchableOpacity onPress={() => handleRoteiroPress(item)} style={styles.roteiroItem}>
+      <Text style={styles.roteiroTitle}>{item.nome}</Text>
+      <Text style={styles.roteiroDetails}>Início: {new Date(item.dataInicio).toLocaleDateString()}</Text>
+      <Text style={styles.roteiroDetails}>Final: {new Date(item.dataFinal).toLocaleDateString()}</Text>
+      <Text style={styles.roteiroDetails}>Visibilidade: {item.visibilidade}</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <Text style={styles.headerText}>Plantour</Text>
       </View>
       <View style={styles.contentContainer}>
-        <View>
         <Text style={styles.roteiros}>Meus Roteiros</Text>
-        </View>
+        <FlatList
+          data={roteiros}
+          renderItem={renderRoteiroItem}
+          keyExtractor={item => item.id}
+          contentContainerStyle={styles.listContainer}
+        />
         <Botao 
           texto="Criar roteiro" 
           icone={{ uri: 'https://img.icons8.com/ios/452/clipboard.png' }} 
           onPress={() => router.push('/CriarRoteiro')} 
-        />
-        <Botao 
-          texto="Meus locais" 
-          icone={{ uri: 'https://img.icons8.com/ios/452/place-marker.png' }} 
-          onPress={() => { /* handle button press */ }} 
-        />
-        <Botao 
-          texto="Buscar roteiros" 
-          icone={{ uri: 'https://img.icons8.com/ios/452/search.png' }} 
-          onPress={() => { /* handle button press */ }} 
-        />
-        <Botao 
-          texto="Buscar atrações" 
-          icone={{ uri: 'https://img.icons8.com/ios/452/search.png' }} 
-          onPress={() => { /* handle button press */ }} 
         />
       </View>
       <BottomNavBar openSearchModal={openSearchModal} />
@@ -66,21 +95,18 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 20,
     fontWeight: 'bold',
-    right: 140,
   },
   roteiros: {
     color: 'black',
     fontSize: 20,
     fontWeight: 'bold',
-    right: 110,
-    bottom: 380,
-    
+    marginVertical: 20,
   },
   contentContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    top:200,
+    paddingHorizontal: 20,
   },
   botao: {
     flexDirection: 'row',
@@ -98,13 +124,34 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     marginRight: 10,
-    right:70,
   },
   textoBotao: {
     color: '#2D9AFF',
     fontSize: 16,
     fontWeight: 'bold',
-    right:15,
+  },
+  listContainer: {
+    width: '100%',
+  },
+  roteiroItem: {
+    backgroundColor: '#F5F5F5',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 10,
+    shadowColor: '#000000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
+  },
+  roteiroTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  roteiroDetails: {
+    fontSize: 14,
+    color: '#666666',
   },
 });
 
