@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
     elevation: 3,
+    width:400,
   },
   roteiroTitle: {
     fontSize: 18,

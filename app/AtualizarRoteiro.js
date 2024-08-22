@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { doc, updateDoc } from 'firebase/firestore';
-import { db } from './../firebaseConfig'; // Ajuste o caminho conforme necessário
+import { db } from './../firebaseConfig';
 
 const AtualizarRoteiro = () => {
   const router = useRouter();
-  const { roteiro } = useLocalSearchParams(); // Parâmetro passado da tela anterior
+  const { roteiro } = useLocalSearchParams();
 
-  // Verifique se o parâmetro roteiro está presente e é um JSON válido
   let roteiroData = {};
   try {
     roteiroData = roteiro ? JSON.parse(roteiro) : {};
@@ -21,10 +20,10 @@ const AtualizarRoteiro = () => {
   const [dataInicio, setDataInicio] = useState(roteiroData.dataInicio || '');
   const [dataFinal, setDataFinal] = useState(roteiroData.dataFinal || '');
   const [visibilidade, setVisibilidade] = useState(roteiroData.visibilidade || '');
-  const [locais, setLocais] = useState((roteiroData.locais || []).join(', '));
+  const [locais, setLocais] = useState(roteiroData.locais || []);
 
   const handleUpdate = async () => {
-    if (!nome || !dataInicio || !dataFinal || !visibilidade || !locais) {
+    if (!nome || !dataInicio || !dataFinal || !visibilidade || locais.length === 0) {
       Alert.alert('Erro', 'Todos os campos devem ser preenchidos.');
       return;
     }
@@ -35,52 +34,78 @@ const AtualizarRoteiro = () => {
         dataInicio,
         dataFinal,
         visibilidade,
-        locais: locais.split(',').map(loc => loc.trim()),
+        locais,
       });
       Alert.alert('Sucesso', 'Roteiro atualizado com sucesso!');
-      router.push('/Viagens'); // Navegar de volta para a lista de roteiros
+      router.push('/Viagens');
     } catch (error) {
       console.error('Erro ao atualizar roteiro: ', error);
       Alert.alert('Erro', 'Não foi possível atualizar o roteiro.');
     }
   };
 
+  const handleAddLocal = () => {
+    setLocais([...locais, '']);
+  };
+
+  const handleLocalChange = (index, value) => {
+    const newLocais = [...locais];
+    newLocais[index] = value;
+    setLocais(newLocais);
+  };
+
+  const handleRemoveLocal = (index) => {
+    setLocais(locais.filter((_, i) => i !== index));
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Nome:</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Atualizar Roteiro</Text>
       <TextInput
         style={styles.input}
+        placeholder="Nome do Roteiro"
         value={nome}
         onChangeText={setNome}
       />
-      <Text style={styles.label}>Data Início:</Text>
       <TextInput
         style={styles.input}
+        placeholder="Data de Início (AAAA-MM-DD)"
         value={dataInicio}
         onChangeText={setDataInicio}
       />
-      <Text style={styles.label}>Data Final:</Text>
       <TextInput
         style={styles.input}
+        placeholder="Data de Final (AAAA-MM-DD)"
         value={dataFinal}
         onChangeText={setDataFinal}
       />
-      <Text style={styles.label}>Visibilidade:</Text>
       <TextInput
         style={styles.input}
+        placeholder="Visibilidade"
         value={visibilidade}
         onChangeText={setVisibilidade}
       />
-      <Text style={styles.label}>Locais (separados por vírgula):</Text>
-      <TextInput
-        style={styles.input}
-        value={locais}
-        onChangeText={setLocais}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleUpdate}>
-        <Text style={styles.buttonText}>Atualizar</Text>
+      <Text style={styles.subTitle}>Locais</Text>
+      {locais.map((local, index) => (
+        <View key={index} style={styles.localContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder={`Local ${index + 1}`}
+            value={local}
+            onChangeText={(value) => handleLocalChange(index, value)}
+          />
+          <TouchableOpacity onPress={() => handleRemoveLocal(index)} style={styles.removeButton}>
+            <Text style={styles.removeButtonText}>Remover</Text>
+          </TouchableOpacity>
+        </View>
+      ))}
+      <TouchableOpacity onPress={handleAddLocal} style={styles.addButton}>
+        <Text style={styles.addButtonText}>Adicionar Local</Text>
       </TouchableOpacity>
-    </View>
+      <TouchableOpacity onPress={handleUpdate} style={styles.updateButton}>
+        <Text style={styles.updateButtonText}>Atualizar Roteiro</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 };
 
@@ -88,30 +113,65 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F0F4F8',
   },
-  label: {
-    fontSize: 16,
+  title: {
+    fontSize: 26,
     fontWeight: 'bold',
-    marginBottom: 5,
+    color: '#2D9AFF',
+    marginBottom: 20,
+    textAlign: 'center',
   },
   input: {
-    height: 40,
-    borderColor: '#CCCCCC',
-    borderWidth: 1,
-    borderRadius: 5,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    padding: 15,
     marginBottom: 15,
-    paddingHorizontal: 10,
+    fontSize: 16,
+    color: '#333333',
+    borderColor: '#E0E0E0',
+    borderWidth: 1,
   },
-  button: {
-    backgroundColor: '#2D9AFF',
-    paddingVertical: 10,
-    borderRadius: 5,
+  subTitle: {
+    fontSize: 22,
+    fontWeight: '600',
+    color: '#2D9AFF',
+    marginTop: 20,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  localContainer: {
+    marginBottom: 10,
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  buttonText: {
+  removeButton: {
+    marginLeft: 10,
+  },
+  removeButtonText: {
+    color: '#FF6347',
+  },
+  addButton: {
+    backgroundColor: '#2D9AFF',
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 15,
+    alignItems: 'center',
+  },
+  addButtonText: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  updateButton: {
+    backgroundColor: '#2D9AFF',
+    borderRadius: 10,
+    padding: 15,
+    alignItems: 'center',
+  },
+  updateButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });

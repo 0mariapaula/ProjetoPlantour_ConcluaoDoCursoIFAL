@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router'; //adc : antes nao estava funcionando
 import DateTimePicker from '@react-native-community/datetimepicker';
+
 import { collection, addDoc } from "firebase/firestore";
 import { db } from './../firebaseConfig';
 import { getAuth } from 'firebase/auth';
@@ -47,23 +48,23 @@ const CriarRoteiro = () => {
     setShowFinal(true);
   };
 
-  const adicionarRoteiro = async () => {
-    try {
-      const usuarioId = 'ID_DO_USUARIO_AUTENTICADO'; // Substitua com o ID do usuário autenticado
-      await addDoc(collection(db, 'roteiros'), {
-        nome,
-        locais,
-        dataInicio: dataInicio.toISOString(),
-        dataFinal: dataFinal.toISOString(),
-        visibilidade,
-        usuarioId, // Certifique-se de adicionar o campo usuarioId
-      });
-      console.log('Roteiro criado com sucesso!');
-      router.push('/Viagens'); // Navegar de volta para a tela 'Viagens'
-    } catch (e) {
-      console.error('Erro ao adicionar documento: ', e);
-    }
-  };
+const adicionarRoteiro = async () => {
+  try {
+    const usuarioId = 'ID_DO_USUARIO_AUTENTICADO'; // Substitua com o ID do usuário autenticado
+    await addDoc(collection(db, 'roteiros'), {
+      nome,
+      locais,
+      dataInicio: dataInicio.toISOString(),
+      dataFinal: dataFinal.toISOString(),
+      visibilidade,
+      usuarioId, // Certifique-se de adicionar o campo usuarioId
+    });
+    console.log('Roteiro criado com sucesso!');
+    router.push('/Viagens'); // Navegar de volta para a tela 'Viagens'
+  } catch (e) {
+    console.error('Erro ao adicionar documento: ', e);
+  }
+};
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -94,64 +95,93 @@ const CriarRoteiro = () => {
                     placeholder={`Local ${index + 1}`}
                     value={local}
                     onChangeText={(text) => {
-                      const updatedLocais = [...locais];
+                      let updatedLocais = [...locais];
                       updatedLocais[index] = text;
                       setLocais(updatedLocais);
                     }}
                   />
-                  <TouchableOpacity onPress={() => removeLocalInput(index)}>
-                    <Text style={styles.removeButton}>X</Text>
-                  </TouchableOpacity>
+                  {index === locais.length - 1 ? (
+                    <TouchableOpacity style={styles.localButton} onPress={addLocalInput}>
+                      <Image
+                        source={{ uri: 'https://img.icons8.com/ios/452/plus.png' }}
+                        style={styles.localIcon}
+                      />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity style={styles.localButton} onPress={() => removeLocalInput(index)}>
+                      <Image
+                        source={{ uri: 'https://img.icons8.com/android/452/minus.png' }}
+                        style={styles.localIcon}
+                      />
+                    </TouchableOpacity>
+                  )}
                 </View>
               ))}
-              <TouchableOpacity onPress={addLocalInput} style={styles.addButton}>
-                <Text style={styles.addButtonText}>Adicionar Local</Text>
+            </View>
+          </View>
+          <View style={styles.dateContainer}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Data início</Text>
+              <TouchableOpacity onPress={showDatepickerInicio}>
+                <TextInput
+                  style={[styles.input, styles.dateInput]}
+                  placeholder="Data início"
+                  value={dataInicio.toLocaleDateString()}
+                  editable={false}
+                />
               </TouchableOpacity>
+              {showInicio && (
+                <DateTimePicker
+                  testID="dateTimePickerInicio"
+                  value={dataInicio}
+                  mode="date"
+                  display="default"
+                  onChange={onChangeInicio}
+                />
+              )}
+            </View>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Data final</Text>
+              <TouchableOpacity onPress={showDatepickerFinal}>
+                <TextInput
+                  style={[styles.input, styles.dateInput]}
+                  placeholder="Data final"
+                  value={dataFinal.toLocaleDateString()}
+                  editable={false}
+                />
+              </TouchableOpacity>
+              {showFinal && (
+                <DateTimePicker
+                  testID="dateTimePickerFinal"
+                  value={dataFinal}
+                  mode="date"
+                  display="default"
+                  onChange={onChangeFinal}
+                />
+              )}
             </View>
           </View>
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Data de Início</Text>
-            <TouchableOpacity onPress={showDatepickerInicio}>
-              <Text style={styles.input}>{dataInicio.toDateString()}</Text>
-            </TouchableOpacity>
-            {showInicio && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={dataInicio}
-                mode="date"
-                is24Hour={true}
-                display="default"
-                onChange={onChangeInicio}
-              />
-            )}
-          </View>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Data de Final</Text>
-            <TouchableOpacity onPress={showDatepickerFinal}>
-              <Text style={styles.input}>{dataFinal.toDateString()}</Text>
-            </TouchableOpacity>
-            {showFinal && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={dataFinal}
-                mode="date"
-                is24Hour={true}
-                display="default"
-                onChange={onChangeFinal}
-              />
-            )}
-          </View>
-          <View style={styles.inputGroup}>
             <Text style={styles.label}>Visibilidade</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Visibilidade"
-              value={visibilidade}
-              onChangeText={setVisibilidade}
-            />
+            <View style={styles.radioContainer}>
+              <TouchableOpacity
+                style={styles.radioButton}
+                onPress={() => setVisibilidade('Privado')}
+              >
+                <View style={[styles.radioCircle, visibilidade === 'Privado' && styles.selectedRadioCircle]} />
+                <Text style={styles.radioText}>Privado</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.radioButton}
+                onPress={() => setVisibilidade('Público')}
+              >
+                <View style={[styles.radioCircle, visibilidade === 'Público' && styles.selectedRadioCircle]} />
+                <Text style={styles.radioText}>Público</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <TouchableOpacity style={styles.submitButton} onPress={adicionarRoteiro}>
-            <Text style={styles.submitButtonText}>Salvar</Text>
+          <TouchableOpacity style={[styles.button, styles.finalizarButton]} onPress={adicionarRoteiro}>
+            <Text style={styles.finalizarButtonText}>Finalizar</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -162,6 +192,8 @@ const CriarRoteiro = () => {
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
+    backgroundColor: '#FFFFFF',
+    paddingBottom: 50,
   },
   container: {
     flex: 1,
@@ -171,77 +203,114 @@ const styles = StyleSheet.create({
     height: 80,
     width: '100%',
     backgroundColor: '#2D9AFF',
-    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  seta: {
-    width: 24,
-    height: 24,
-    tintColor: '#FFFFFF',
+    paddingTop: 30,
   },
   topBarText: {
-    color: '#FFFFFF',
     fontSize: 20,
     fontWeight: 'bold',
-    marginLeft: 20,
+    color: '#FFFFFF',
+    bottom: 30,
   },
   contentContainer: {
-    padding: 20,
-    flex: 1,
+    alignItems: 'center',
+    paddingTop: 20,
   },
   inputGroup: {
-    marginBottom: 15,
+    width: '90%',
+    marginVertical: 10,
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
+    color: '#000000',
     marginBottom: 5,
+  },
+  seta: {
+    right: 150,
   },
   input: {
     height: 40,
-    borderColor: '#DDDDDD',
+    borderColor: 'black',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
   },
   localInputContainer: {
-    marginTop: 10,
+    width: '100%',
   },
   localInputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: 10,
   },
   localInput: {
     flex: 1,
-    marginRight: 10,
   },
-  removeButton: {
-    color: '#FF0000',
-    fontWeight: 'bold',
+  localButton: {
+    marginLeft: 10,
   },
-  addButton: {
-    marginTop: 10,
-    backgroundColor: '#2D9AFF',
-    paddingVertical: 10,
-    borderRadius: 5,
+  localIcon: {
+    width: 24,
+    height: 24,
   },
-  addButtonText: {
-    color: '#FFFFFF',
-    textAlign: 'center',
-    fontWeight: 'bold',
+  dateContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '90%',
+    marginLeft: 150,
   },
-  submitButton: {
-    backgroundColor: '#2D9AFF',
-    paddingVertical: 15,
-    borderRadius: 5,
+  dateInput: {
+    width: '48%',
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 10,
+  },
+  radioButton: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  submitButtonText: {
+  radioCircle: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#2D9AFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  selectedRadioCircle: {
+    backgroundColor: '#2D9AFF',
+  },
+  radioText: {
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#2D9AFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    marginVertical: 10,
+    width: '90%',
+    alignItems: 'center',
+  },
+  buttonText: {
     color: '#FFFFFF',
+    fontSize: 16,
     fontWeight: 'bold',
-    fontSize: 18,
+  },
+  finalizarButton: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#2D9AFF',
+  },
+  finalizarButtonText: {
+    color: '#2D9AFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
