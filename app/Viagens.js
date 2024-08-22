@@ -32,9 +32,6 @@ const Viagens = ({ openSearchModal }) => {
   }, []);
 
   const handleRoteiroPress = (item) => {
-    // Verifique se 'item' está definido e possui propriedades necessárias
-    console.log('Item clicado:', item);
-    
     if (item) {
       router.push({
         pathname: '/DetalhesRoteiro',
@@ -45,13 +42,45 @@ const Viagens = ({ openSearchModal }) => {
     }
   };
 
+  const handleEditPress = (item) => {
+    if (item) {
+      router.push({
+        pathname: '/EditarRoteiro',
+        params: { roteiro: JSON.stringify(item) }, // Passando o item como uma string JSON
+      });
+    } else {
+      console.error('Item não definido!');
+    }
+  };
+
+  const handleDeletePress = (item) => {
+    // Adicione a lógica para excluir o item
+    console.log('Excluir item:', item);
+  };
+
   const renderRoteiroItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleRoteiroPress(item)} style={styles.roteiroItem}>
-      <Text style={styles.roteiroTitle}>{item.nome}</Text>
-      <Text style={styles.roteiroDetails}>Início: {new Date(item.dataInicio).toLocaleDateString()}</Text>
-      <Text style={styles.roteiroDetails}>Final: {new Date(item.dataFinal).toLocaleDateString()}</Text>
-      <Text style={styles.roteiroDetails}>Visibilidade: {item.visibilidade}</Text>
-    </TouchableOpacity>
+    <View style={styles.roteiroItemContainer}>
+      <TouchableOpacity onPress={() => handleRoteiroPress(item)} style={styles.roteiroItem}>
+        <Text style={styles.roteiroTitle}>{item.nome}</Text>
+        <Text style={styles.roteiroDetails}>Início: {new Date(item.dataInicio).toLocaleDateString()}</Text>
+        <Text style={styles.roteiroDetails}>Final: {new Date(item.dataFinal).toLocaleDateString()}</Text>
+        <Text style={styles.roteiroDetails}>Visibilidade: {item.visibilidade}</Text>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity onPress={() => handleEditPress(item)} style={styles.editButton}>
+            <Image 
+              source={{ uri: 'https://img.icons8.com/ios/452/edit.png' }} 
+              style={[styles.editIcon, { tintColor: '#2D9AFF' }]} // Azul
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleDeletePress(item)} style={styles.deleteButton}>
+            <Image 
+              source={{ uri: 'https://img.icons8.com/ios/452/delete.png' }} 
+              style={styles.deleteIcon} 
+            />
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 
   return (
@@ -141,6 +170,9 @@ const styles = StyleSheet.create({
   listContainer: {
     width: '100%',
   },
+  roteiroItemContainer: {
+    marginBottom: 10,
+  },
   roteiroItem: {
     backgroundColor: '#F5F5F5',
     borderRadius: 10,
@@ -151,7 +183,8 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
     elevation: 3,
-    width:400,
+    width: 350,
+    position: 'relative',
   },
   roteiroTitle: {
     fontSize: 18,
@@ -161,6 +194,31 @@ const styles = StyleSheet.create({
   roteiroDetails: {
     fontSize: 14,
     color: '#666666',
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
+  editButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 5,
+  },
+  editIcon: {
+    width: 24,
+    height: 24,
+  },
+  deleteButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 5,
+    marginLeft: 10,
+  },
+  deleteIcon: {
+    width: 24,
+    height: 24,
   },
 });
 
