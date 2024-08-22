@@ -1,3 +1,4 @@
+// Viagens.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
 import BottomNavBar from './BottomNavBar'; // Ajuste o caminho conforme necessário
@@ -8,14 +9,14 @@ import { collection, query, where, onSnapshot } from 'firebase/firestore';
 const Viagens = ({ openSearchModal }) => {
   const router = useRouter();
   const [roteiros, setRoteiros] = useState([]);
-  
+
   useEffect(() => {
     const fetchRoteiros = async () => {
       try {
         const usuarioId = 'ID_DO_USUARIO_AUTENTICADO'; // Substitua com o ID do usuário autenticado
         const roteirosRef = collection(db, 'roteiros');
         const q = query(roteirosRef, where('usuarioId', '==', usuarioId));
-        
+
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
           const roteirosList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           setRoteiros(roteirosList);
@@ -29,13 +30,20 @@ const Viagens = ({ openSearchModal }) => {
 
     fetchRoteiros();
   }, []);
+
   const handleRoteiroPress = (item) => {
-    router.push({
-      pathname: '/DetalhesRoteiro',
-      params: { roteiro: item },
-    });
+    // Verifique se 'item' está definido e possui propriedades necessárias
+    console.log('Item clicado:', item);
+    
+    if (item) {
+      router.push({
+        pathname: '/DetalhesRoteiro',
+        params: { roteiro: JSON.stringify(item) }, // Passando o item como uma string JSON
+      });
+    } else {
+      console.error('Item não definido!');
+    }
   };
-  
 
   const renderRoteiroItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleRoteiroPress(item)} style={styles.roteiroItem}>
