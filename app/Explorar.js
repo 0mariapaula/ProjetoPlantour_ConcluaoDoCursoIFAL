@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Modal } fr
 import { useRouter } from 'expo-router';
 import BottomNavBar from './BottomNavBar';
 import { collection, getDocs } from "firebase/firestore";
-import { db } from './../firebaseConfig';
+import { db, auth } from './../firebaseConfig'; // Adicione a importação de auth
+import { signOut } from 'firebase/auth'; // Adicione a importação de signOut
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Explorar = () => {
@@ -17,6 +18,16 @@ const Explorar = () => {
 
   const closeConfigModal = () => {
     setConfigModalVisible(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      // Redirecione para a página inicial, que pode ser '/'
+      router.push('/'); 
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
   };
 
   useEffect(() => {
@@ -38,21 +49,21 @@ const Explorar = () => {
       .filter(pub => pub.tipo === tipo)
       .map((pub, index) => (
         <TouchableOpacity 
-        key={index} 
-        style={styles.card} 
-        onPress={() => router.push({
-          pathname: '/CardDetalhes',
-          params: { 
-            imagemUrl: pub.imagemUrl,
-            titulo: pub.titulo,
-            valor: pub.valor,
-            descricao: pub.descricao,
-            endereco: pub.endereco,
-            tipo: pub.tipo,
-            id: pub.id
-          }
-        })}
-      >
+          key={index} 
+          style={styles.card} 
+          onPress={() => router.push({
+            pathname: '/CardDetalhes',
+            params: { 
+              imagemUrl: pub.imagemUrl,
+              titulo: pub.titulo,
+              valor: pub.valor,
+              descricao: pub.descricao,
+              endereco: pub.endereco,
+              tipo: pub.tipo,
+              id: pub.id
+            }
+          })}
+        >
           {pub.imagemUrl ? (
             <Image source={{ uri: pub.imagemUrl }} style={styles.cardImage} />
           ) : (
@@ -155,7 +166,7 @@ const Explorar = () => {
               <Icon name="question-circle" size={20} color="#000" style={styles.configIcon} />
               <Text style={styles.configOptionText}>Ajuda e Feedback</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.configOption, { borderColor: 'red' }]} onPress={closeConfigModal}>
+            <TouchableOpacity style={[styles.configOption, { borderColor: 'red' }]} onPress={handleLogout}>
               <Icon name="sign-out" size={20} color="red" style={styles.configIcon} />
               <Text style={[styles.configOptionText, { color: 'red' }]}>Sair</Text>
             </TouchableOpacity>
@@ -238,7 +249,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#3A3A3A',
     fontSize: 17,
-
   },
   textoTitulo: {
     width: '90%',
